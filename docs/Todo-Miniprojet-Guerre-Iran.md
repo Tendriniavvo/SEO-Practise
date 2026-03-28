@@ -1,7 +1,9 @@
 # Todo List — Mini-projet Web Design (Mars 2026)
+
 > Site d'informations sur la guerre en Iran · Travail en binôme · **Délai : Mardi 31 mars 2026 à 14h00**
 
 **Livrables attendus :**
+
 - ZIP fonctionnel dans des conteneurs Docker
 - Dépôt Git public (GitHub ou GitLab)
 - Document technique (captures FO/BO, modélisation BDD, login admin, numéros ETU)
@@ -10,11 +12,11 @@
 
 ## Légende
 
-| Badge | Responsable |
-|---|---|
-| `[P]` | Développeur P |
-| `[T]` | Développeur T |
-| `[P+T]` | Les deux ensemble |
+| Badge             | Responsable                               |
+| ----------------- | ----------------------------------------- |
+| `[P]`           | Développeur P                            |
+| `[T]`           | Développeur T                            |
+| `[P+T]`         | Les deux ensemble                         |
 | `⚠️ critique` | Point de notation explicite dans le sujet |
 
 ---
@@ -83,14 +85,14 @@
 
 ## Récapitulatif de la répartition
 
-| | Développeur P | Développeur T | Les deux |
-|---|---|---|---|
-| **Initialisation** | Docker Compose | Structure dossiers | Dépôt Git, réunion conception |
-| **Base de données** | Intégration Docker | Modélisation, SQL, seed | — |
-| **FrontOffice** | Accueil, Article, Catégorie | Navigation, Recherche | — |
-| **BackOffice** | CRUD catégories, Médias | Login, Dashboard, Formulaire article | Middleware auth |
-| **SEO** | URL Rewriting, `<title>`, `alt`, WebP | `<meta>`, H1-H6, sitemap, Schema.org | Lighthouse |
-| **Livraison** | Docker final | Test Docker | Document technique, ZIP, Git |
+|                            | Développeur P                           | Développeur T                         | Les deux                         |
+| -------------------------- | ---------------------------------------- | -------------------------------------- | -------------------------------- |
+| **Initialisation**   | Docker Compose                           | Structure dossiers                     | Dépôt Git, réunion conception |
+| **Base de données** | Intégration Docker                      | Modélisation, SQL, seed               | —                               |
+| **FrontOffice**      | Accueil, Article, Catégorie             | Navigation, Recherche                  | —                               |
+| **BackOffice**       | CRUD catégories, Médias                | Login, Dashboard, Formulaire article   | Middleware auth                  |
+| **SEO**              | URL Rewriting,`<title>`, `alt`, WebP | `<meta>`, H1-H6, sitemap, Schema.org | Lighthouse                       |
+| **Livraison**        | Docker final                             | Test Docker                            | Document technique, ZIP, Git     |
 
 ---
 

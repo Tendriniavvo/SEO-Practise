@@ -11,7 +11,7 @@ if (!$category) {
     die("Catégorie non trouvée");
 }
 
-$stmtArticles = $pdo->prepare("SELECT * FROM articles WHERE id_categorie = ? AND statut = 'publié' ORDER BY created_at DESC");
+$stmtArticles = $pdo->prepare("SELECT * FROM articles WHERE id_categorie = ? ORDER BY created_at DESC");
 $stmtArticles->execute([$category['id']]);
 ?>
 <!DOCTYPE html>
@@ -19,6 +19,7 @@ $stmtArticles->execute([$category['id']]);
 <head>
     <meta charset="UTF-8">
     <title>Guerre en Iran : Articles sur <?php echo htmlspecialchars($category['nom']); ?></title>
+
     <meta name="description" content="Découvrez tous nos articles et analyses concernant <?php echo htmlspecialchars($category['nom']); ?> dans le cadre du conflit iranien de 2026.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>

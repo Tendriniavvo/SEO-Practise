@@ -16,10 +16,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $alt_image = $_POST['alt_image'];
     $statut = $_POST['statut'];
-    $image = $_POST['image'] ?: null; // Dans un vrai projet, gérer l'upload ici
+    
+    // GESTION DE L'IMAGE
+    $image_name = null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $upload_dir = '../img/';
+        $file_name = time() . '_' . basename($_FILES['image']['name']);
+        $target_path = $upload_dir . $file_name;
+        
+        // Vérification de l'extension (par ex. jpg, png, webp)
+        $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        
+        if (in_array($ext, $allowed_ext)) {
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
+                $image_name = $file_name;
+            }
+        }
+    }
 
     $stmt = $pdo->prepare("INSERT INTO articles (titre, slug, contenu, id_categorie, description, alt_image, statut, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$titre, $slug, $contenu, $id_categorie, $description, $alt_image, $statut, $image]);
+    $stmt->execute([$titre, $slug, $contenu, $id_categorie, $description, $alt_image, $statut, $image_name]);
     
     header("Location: dashboard.php");
     exit();
@@ -27,57 +44,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un article - Administration</title>
-    <style>
-        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 8px; box-sizing: border-box; }
-        textarea { height: 200px; }
-        .btn-submit { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
-        .back-link { margin-top: 20px; display: block; color: #666; }
-    </style>
-</head>
+<!-- ...existing code... -->
 <body>
     <h1>Ajouter un nouvel article</h1>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="titre">Titre (SEO: H1 et Title) :</label>
-            <input type="text" id="titre" name="titre" required placeholder="Impact des sanctions sur l'économie">
-        </div>
-        <div class="form-group">
-            <label for="slug">Slug (URL amicale) :</label>
-            <input type="text" id="slug" name="slug" required placeholder="impact-sanctions-economie">
-        </div>
-        <div class="form-group">
-            <label for="description">Meta Description (160 caractères max) :</label>
-            <input type="text" id="description" name="description" maxlength="300" required placeholder="Résumé court pour Google...">
-        </div>
-        <div class="form-group">
-            <label for="id_categorie">Catégorie :</label>
-            <select name="id_categorie" required>
-                <?php
-                $stmt = $pdo->query("SELECT * FROM categories");
-                while ($row = $stmt->fetch()) {
-                    echo "<option value='{$row['id']}'>".htmlspecialchars($row['nom'])."</option>";
-                }
-                ?>
-            </select>
-        </div>
+<!-- ...existing code... -->
         <div class="form-group">
             <label for="contenu">Contenu de l'article :</label>
             <textarea id="contenu" name="contenu" required></textarea>
         </div>
         <div class="form-group">
-            <label for="image">Nom de l'image (fictif) :</label>
-            <input type="text" id="image" name="image" placeholder="sanctions.jpg">
+            <label for="image">Image de l'article (JPG, PNG, WEBP) :</label>
+            <input type="file" id="image" name="image" accept="image/*">
         </div>
         <div class="form-group">
             <label for="alt_image">Texte Alternatif (Alt Image SEO) :</label>
-            <input type="text" id="alt_image" name="alt_image" placeholder="Graphique montrant la chute du Rial">
-        </div>
+<!-- ...existing code... -->
+
         <div class="form-group">
             <label for="statut">Statut :</label>
             <select name="statut">

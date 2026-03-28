@@ -31,10 +31,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $alt_image = $_POST['alt_image'];
     $statut = $_POST['statut'];
-    $image = $_POST['image'] ?: null; // Dans un vrai projet, gérer l'upload ici
+    $image_to_save = $article['image']; // Conserver l'existante par défaut
+
+    // GESTION DE L'IMAGE
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $upload_dir = '../img/';
+        $file_name = time() . '_' . basename($_FILES['image']['name']);
+        $target_path = $upload_dir . $file_name;
+        
+        // Vérification de l'extension
+        $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        
+        if (in_array($ext, $allowed_ext)) {
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
+                $image_to_save = $file_name;
+            }
+        }
+    }
 
     $stmt = $pdo->prepare("UPDATE articles SET titre = ?, slug = ?, contenu = ?, id_categorie = ?, description = ?, alt_image = ?, statut = ?, image = ? WHERE id = ?");
-    $stmt->execute([$titre, $slug, $contenu, $id_categorie, $description, $alt_image, $statut, $image, $id]);
+    $stmt->execute([$titre, $slug, $contenu, $id_categorie, $description, $alt_image, $statut, $image_to_save, $id]);
     
     header("Location: dashboard.php");
     exit();
@@ -42,58 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier un article - Administration</title>
-    <style>
-        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 8px; box-sizing: border-box; }
-        textarea { height: 200px; }
-        .btn-submit { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
-        .back-link { margin-top: 20px; display: block; color: #666; }
-    </style>
-</head>
+<!-- ...existing code... -->
 <body>
     <h1>Modifier l'article "<?php echo htmlspecialchars($article['titre']); ?>"</h1>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="titre">Titre (SEO: H1 et Title) :</label>
-            <input type="text" id="titre" name="titre" value="<?php echo htmlspecialchars($article['titre']); ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="slug">Slug (URL amicale) :</label>
-            <input type="text" id="slug" name="slug" value="<?php echo htmlspecialchars($article['slug']); ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Meta Description (160 caractères max) :</label>
-            <input type="text" id="description" name="description" maxlength="300" value="<?php echo htmlspecialchars($article['description']); ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="id_categorie">Catégorie :</label>
-            <select name="id_categorie" required>
-                <?php
-                $stmt = $pdo->query("SELECT * FROM categories");
-                while ($row = $stmt->fetch()) {
-                    $selected = ($row['id'] == $article['id_categorie']) ? 'selected' : '';
-                    echo "<option value='{$row['id']}' $selected>".htmlspecialchars($row['nom'])."</option>";
-                }
-                ?>
-            </select>
-        </div>
+<!-- ...existing code... -->
         <div class="form-group">
             <label for="contenu">Contenu de l'article :</label>
             <textarea id="contenu" name="contenu" required><?php echo htmlspecialchars($article['contenu']); ?></textarea>
         </div>
         <div class="form-group">
-            <label for="image">Nom de l'image (fictif) :</label>
-            <input type="text" id="image" name="image" value="<?php echo htmlspecialchars($article['image'] ?? ''); ?>">
+            <label for="image">Remplacer l'image (JPG, PNG, WEBP) :</label>
+            <?php if ($article['image']) : ?>
+                <p><small>Image actuelle : /img/<?php echo $article['image']; ?></small></p>
+            <?php endif; ?>
+            <input type="file" id="image" name="image" accept="image/*">
         </div>
         <div class="form-group">
             <label for="alt_image">Texte Alternatif (Alt Image SEO) :</label>
-            <input type="text" id="alt_image" name="alt_image" value="<?php echo htmlspecialchars($article['alt_image'] ?? ''); ?>">
-        </div>
+<!-- ...existing code... -->
+
         <div class="form-group">
             <label for="statut">Statut :</label>
             <select name="statut">

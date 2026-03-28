@@ -31,10 +31,11 @@
         <section>
             <h2>Derniers Articles sur le Conflit</h2>
             <?php
-            $stmt = $pdo->query("SELECT a.*, c.nom as cat_nom FROM articles a JOIN categories c ON a.id_categorie = c.id WHERE a.statut = 'publié' ORDER BY a.created_at DESC");
+            $stmt = $pdo->query("SELECT a.*, c.nom as cat_nom FROM articles a JOIN categories c ON a.id_categorie = c.id ORDER BY a.created_at DESC");
             while ($row = $stmt->fetch()) {
             ?>
                 <article>
+
                     <h3><a href="/article/<?php echo $row['slug']; ?>"><?php echo htmlspecialchars($row['titre']); ?></a></h3>
                     <p><em>Publié le <?php echo date('d/m/Y', strtotime($row['created_at'])); ?> dans <strong><?php echo htmlspecialchars($row['cat_nom']); ?></strong></em></p>
                     <p><?php echo htmlspecialchars($row['description']); ?></p>

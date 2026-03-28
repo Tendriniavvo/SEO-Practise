@@ -2,7 +2,7 @@
 require_once '../config/db.php';
 
 $slug = $_GET['slug'] ?? '';
-$stmt = $pdo->prepare("SELECT a.*, c.nom as cat_nom FROM articles a JOIN categories c ON a.id_categorie = c.id WHERE a.slug = ? AND a.statut = 'publié'");
+$stmt = $pdo->prepare("SELECT a.*, c.nom as cat_nom FROM articles a JOIN categories c ON a.id_categorie = c.id WHERE a.slug = ?");
 $stmt->execute([$slug]);
 $article = $stmt->fetch();
 
