@@ -1,15 +1,26 @@
 RewriteEngine On
+RewriteBase /
 
-# Si c'est un fichier ou un dossier qui existe, on ne réécrit pas
+# 1. Empêcher l'accès direct aux fichiers PHP internes (sauf index de dossiers si besoin)
+# RewriteCond %{REQUEST_URI} ^/front/ [NC,OR]
+# RewriteCond %{REQUEST_URI} ^/config/ [NC]
+# RewriteRule ^.*$ - [F,L]
+
+# 2. Rediriger la racine vers l'index du front-office
+RewriteRule ^$ front/index.php [L]
+
+# 3. URL Rewriting pour les Articles : /article/mon-slug -> front/article.php?slug=mon-slug
+RewriteRule ^article/([a-z0-9-]+)/?$ front/article.php?slug=$1 [L,QSA]
+
+# 4. URL Rewriting pour les Catégories : /categorie/mon-slug -> front/categorie.php?slug=mon-slug
+RewriteRule ^categorie/([a-z0-9-]+)/?$ front/categorie.php?slug=$1 [L,QSA]
+
+# 5. Admin access (si on veut simplifier l'accès, mais www/admin/login.php fonctionne déjà)
+# On peut rediriger /admin vers admin/login.php par exemple
+RewriteRule ^admin/?$ admin/login.php [L]
+
+# Si le fichier ou dossier n'existe pas, on peut éventuellement rediriger vers une 404
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ front/index.php [L]
 
-# Exemple de réécriture pour les articles
-# transforme iran-heritage en front/article.php?slug=iran-heritage
-RewriteRule ^article/([a-z0-9-]+)$ front/article.php?slug=$1 [L,QSA]
-
-# Exemple de réécriture pour les catégories
-RewriteRule ^categorie/([a-z0-9-]+)$ front/categorie.php?slug=$1 [L,QSA]
-
-# On peut aussi rediriger la racine vers index.php
-RewriteRule ^$ front/index.php [L]
