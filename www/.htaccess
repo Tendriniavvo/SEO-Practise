@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Si c'est un fichier ou un dossier qui existe, on ne réécrit pas
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Exemple de réécriture pour les articles
+# transforme iran-heritage en front/article.php?slug=iran-heritage
+RewriteRule ^article/([a-z0-9-]+)$ front/article.php?slug=$1 [L,QSA]
+
+# Exemple de réécriture pour les catégories
+RewriteRule ^categorie/([a-z0-9-]+)$ front/categorie.php?slug=$1 [L,QSA]
+
+# On peut aussi rediriger la racine vers index.php
+RewriteRule ^$ front/index.php [L]
