@@ -1,6 +1,6 @@
 <?php
 $host = 'db';
-$db   = 'iran_db';
+$db   = 'iran_news';
 $user = 'root';
 $pass = 'root';
 $charset = 'utf8mb4';

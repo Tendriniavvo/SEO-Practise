@@ -20,7 +20,6 @@
                              │ image_url                    │
                              │ alt_text                     │
                              │ is_main                      │
-                             │ ordre                        │
                              └──────────────────────────────┘
 
 Explications (Modèle en étoile / Flocon) :

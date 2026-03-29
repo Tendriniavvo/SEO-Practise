@@ -55,6 +55,8 @@ INSERT INTO categories (nom, slug) VALUES
 ('Humanitaire',  'humanitaire'),
 ('Économie',     'economie');
 
+
+
 -- ============================================
 -- DONNÉES : Utilisateur par défaut (Backoffice)
 -- login : admin / admin123
