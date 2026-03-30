@@ -7,10 +7,24 @@
 // En-têtes de sécurité pour les bonnes pratiques Lighthouse
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: SAMEORIGIN");
-header("X-XSS-Protection: 1; mode=block");
 header("Referrer-Policy: strict-origin-when-cross-origin");
-// CSP de base (autorise les polices Google et les images locales/distantes)
-header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: *; connect-src 'self';");
+header("Cross-Origin-Opener-Policy: same-origin");
+header("Cross-Origin-Resource-Policy: same-site");
+header("Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()");
+header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+
+$csp = "default-src 'self'; "
+    . "base-uri 'self'; "
+    . "object-src 'none'; "
+    . "frame-ancestors 'self'; "
+    . "form-action 'self'; "
+    . "script-src 'self' blob:; "
+    . "script-src-elem 'self' blob:; "
+    . "style-src 'self' 'unsafe-inline'; "
+    . "font-src 'self' data:; "
+    . "img-src 'self' data: https: http:; "
+    . "connect-src 'self';";
+header("Content-Security-Policy: " . $csp);
 
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../inc/fonction.php';
@@ -31,6 +45,7 @@ $seoKeywords = 'guerre en iran, actualités iran, géopolitique moyen-orient, co
 $seoType = 'website';
 $seoCanonical = $baseUrl . $requestPath;
 $seoImage = '';
+$seoPreloadImage = '';
 
 if ($page === 'article' && isset($_GET['slug'])) {
     $slug = preg_replace('/[^a-z0-9\-]/i', '', $_GET['slug']);
@@ -52,6 +67,7 @@ if ($page === 'article' && isset($_GET['slug'])) {
             } else {
                 $seoImage = $baseUrl . $imagePath;
             }
+            $seoPreloadImage = $seoImage;
         }
     } else {
         $seoTitle = 'Article - ' . $siteName;
@@ -72,6 +88,22 @@ if ($page === 'article' && isset($_GET['slug'])) {
     }
 } elseif ($page === 'actu_generale') {
     $seoCanonical = $baseUrl . '/front/actualites';
+}
+
+if ($page === 'actu_generale') {
+    $slugForHero = isset($_GET['categorie'])
+        ? preg_replace('/[^a-z0-9\-]/i', '', $_GET['categorie'])
+        : null;
+    $heroForPreload = getArticleHero($pdo, $slugForHero);
+
+    if (!empty($heroForPreload['image_url'])) {
+        $heroImagePath = frontImageUrl($heroForPreload['image_url']);
+        if (strpos($heroImagePath, 'http://') === 0 || strpos($heroImagePath, 'https://') === 0) {
+            $seoPreloadImage = $heroImagePath;
+        } else {
+            $seoPreloadImage = $baseUrl . $heroImagePath;
+        }
+    }
 }
 
 // Layout à utiliser (extensible : on pourrait avoir layout "article", "admin", etc.)

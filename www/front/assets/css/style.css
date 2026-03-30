@@ -9,10 +9,12 @@
       --white: #ffffff;
       --tag-bg: #fff0f2;
       --tag-color: #c80019;
+      --font-sans: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-serif: Georgia, "Times New Roman", serif;
     }
 
     body {
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       background: var(--white);
       color: var(--dark);
       font-size: 15px;
@@ -30,8 +32,14 @@
       border: 0;
     }
 
-    a { color: inherit; }
-    a:hover { color: var(--red); }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--red);
+      text-decoration: none;
+    }
 
     a:focus-visible,
     button:focus-visible,
@@ -39,12 +47,6 @@
       outline: 3px solid #0a66c2;
       outline-offset: 2px;
       border-radius: 4px;
-    }
-
-    a[href]:not(.logo):not(.logout-link):not(.hero-article):not(.article-item):not(.pagination-btn):not(nav ul li a):not(.social-btn):not(.btn-abonne):not([style*="display:flex"]):not([style*="display: flex"]):not([style*="display:inline-flex"]):not([style*="display: inline-flex"]) {
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 2px;
     }
 
     /* ─── HEADER ─── */
@@ -89,7 +91,7 @@
       outline: none;
       font-size: 13px;
       width: 100%;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
     }
     .search-bar svg { color: #666; flex-shrink: 0; }
     .header-actions { display: flex; gap: 12px; align-items: center; }
@@ -103,7 +105,7 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       letter-spacing: .3px;
     }
 
@@ -146,12 +148,7 @@
       color: #5f6368;
       border-bottom: 1px solid var(--border);
     }
-    .breadcrumb a {
-      color: #9f0014;
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 2px;
-    }
+    .breadcrumb a { color: #9f0014; }
     .breadcrumb span { margin: 0 5px; }
 
     /* ─── LAYOUT ─── */
@@ -199,7 +196,7 @@
     .topic-intro h2,
     .topic-intro h3,
     .topic-intro h4 {
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       color: var(--dark);
       margin-bottom: 8px;
       line-height: 1.35;
@@ -250,7 +247,7 @@
       font-size: 22px;
       font-weight: 800;
       line-height: 1.25;
-      font-family: 'Lora', serif;
+      font-family: var(--font-serif);
     }
     .hero-content p { font-size: 14px; color: var(--mid); line-height: 1.6; }
     .meta { font-size: 11px; color: #50555a; display: flex; gap: 10px; align-items: center; }
@@ -280,7 +277,7 @@
       flex-shrink: 0;
     }
     .article-body { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
-    .article-body h3 { font-size: 15px; font-weight: 700; line-height: 1.35; font-family: 'Lora', serif; }
+    .article-body h3 { font-size: 15px; font-weight: 700; line-height: 1.35; font-family: var(--font-serif); }
     .article-body h3:hover { color: var(--red); }
     .article-body p { font-size: 13px; color: var(--mid); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
@@ -301,7 +298,7 @@
       border-radius: 50%;
       cursor: pointer;
       font-size: 13px;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       font-weight: 600;
       transition: all .2s;
       color: var(--dark);
@@ -356,7 +353,7 @@
       border-radius: 5px;
       padding: 8px 12px;
       font-size: 13px;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       margin-bottom: 8px;
       outline: none;
     }
@@ -371,7 +368,7 @@
       font-weight: 700;
       font-size: 13px;
       cursor: pointer;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
     }
 
     /* social */
@@ -383,7 +380,7 @@
       font-weight: 700;
       cursor: pointer;
       border: none;
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-sans);
       display: flex;
       align-items: center;
       gap: 5px;
