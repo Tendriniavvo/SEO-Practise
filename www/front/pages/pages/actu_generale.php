@@ -55,6 +55,32 @@ function paginationUrl($p, $slug) {
 <div class="container">
     <main>
 
+        <div class="section-header">
+            <h1><?= $titrePage ?></h1>
+        </div>
+
+        <section class="topic-intro" aria-labelledby="intro-guerre-iran">
+            <h2 id="intro-guerre-iran">Introduction : Informations sur la guerre en Iran</h2>
+            <p>
+                Ce site d'informations présente une veille structurée sur la guerre en Iran :
+                contexte géopolitique, évolution militaire, impacts humanitaires et enjeux économiques.
+                L'objectif est d'offrir une lecture claire, vérifiable et mise à jour des actualités.
+            </p>
+
+            <h3>Contexte et enjeux du conflit</h3>
+            <p>
+                La guerre en Iran s'inscrit dans un environnement régional complexe où se croisent
+                intérêts stratégiques, sécurité énergétique et équilibres diplomatiques.
+                Les analyses publiées ici aident à comprendre les faits, les acteurs et leurs positions.
+            </p>
+
+            <h4>Ce que vous trouverez sur cette page</h4>
+            <p>
+                Vous trouverez les derniers articles classés par catégorie, des tendances,
+                ainsi qu'une sélection d'actualités à ne pas manquer pour suivre l'évolution du conflit.
+            </p>
+        </section>
+
 
         <?php if ($hero): ?>
         <!-- ── HERO ─────────────────────────────── -->

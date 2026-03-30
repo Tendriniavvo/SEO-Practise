@@ -157,6 +157,35 @@
       border-radius: 2px;
     }
 
+    .topic-intro {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      max-width: 900px;
+      margin: 0 auto 24px;
+      padding: 8px 4px 16px;
+    }
+    .topic-intro h2,
+    .topic-intro h3,
+    .topic-intro h4 {
+      font-family: 'Sora', sans-serif;
+      color: var(--dark);
+      margin-bottom: 8px;
+      line-height: 1.35;
+      text-align: center;
+    }
+    .topic-intro h2 { font-size: 20px; font-weight: 800; }
+    .topic-intro h3 { font-size: 17px; font-weight: 700; margin-top: 12px; }
+    .topic-intro h4 { font-size: 15px; font-weight: 700; margin-top: 10px; }
+    .topic-intro p {
+      color: var(--mid);
+      line-height: 1.7;
+      margin: 0 auto 10px;
+      font-size: 14px;
+      max-width: 860px;
+      text-align: center;
+    }
+
     /* ─── HERO ARTICLE ─── */
     .hero-article {
       display: grid;
