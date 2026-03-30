@@ -4,40 +4,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $slug = $_POST['slug'];
     $contenu = $_POST['contenu'];
     $id_categorie = $_POST['id_categorie'];
-    $description = $_POST['description'];
-    $alt_image = $_POST['alt_image'];
-    $statut = $_POST['statut'];
-    $image = $_POST['image'] ?: null; // Dans un vrai projet, gérer l'upload ici
+    $is_active = ($_POST['statut'] === 'publié') ? 1 : 0;
+    $alt_text = $_POST['alt_image'] ?: $titre;
 
-    $stmt = $pdo->prepare("INSERT INTO articles (titre, slug, contenu, id_categorie, description, alt_image, statut, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$titre, $slug, $contenu, $id_categorie, $description, $alt_image, $statut, $image]);
-    
-    header("Location: index.php?page=dashboard");
-    exit();
+    try {
+        $pdo->beginTransaction();
+
+        // 0. Vérifier si le slug existe déjà
+        $stmtCheck = $pdo->prepare("SELECT id_article FROM fait_article WHERE slug = ?");
+        $stmtCheck->execute([$slug]);
+        if ($stmtCheck->fetch()) {
+            throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
+        }
+
+        // 1. Gérer la dimension Temps
+        $today = date('Y-m-d');
+        $stmtT = $pdo->prepare("SELECT id_temps FROM dim_temps WHERE date = ?");
+        $stmtT->execute([$today]);
+        $dim_temps = $stmtT->fetch();
+
+        if (!$dim_temps) {
+            $stmtIT = $pdo->prepare("INSERT INTO dim_temps (date, annee, mois) VALUES (?, ?, ?)");
+            $stmtIT->execute([$today, date('Y'), date('m')]);
+            $id_temps = $pdo->lastInsertId();
+        } else {
+            $id_temps = $dim_temps['id_temps'];
+        }
+
+        // 2. Gérer l'auteur (admin par défaut)
+        $id_auteur = 1;
+
+        // 3. Insérer l'article
+        $stmtA = $pdo->prepare("INSERT INTO fait_article (id_temps, id_categorie, id_auteur, titre, contenu, slug, is_active, date_publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $date_pub = $is_active ? date('Y-m-d H:i:s') : null;
+        $stmtA->execute([$id_temps, $id_categorie, $id_auteur, $titre, $contenu, $slug, $is_active, $date_pub]);
+        $id_article = $pdo->lastInsertId();
+
+        // 4. Gérer l'upload de plusieurs images
+        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+            $upload_dir = __DIR__ . '/../../../uploads/articles/';
+            $files = $_FILES['images'];
+
+            foreach ($files['name'] as $key => $name) {
+                if ($files['error'][$key] === 0) {
+                    $tmp_name = $files['tmp_name'][$key];
+                    $extension = pathinfo($name, PATHINFO_EXTENSION);
+                    $new_name = uniqid('art_' . $id_article . '_') . '.' . $extension;
+                    $upload_path = $upload_dir . $new_name;
+                    $db_path = '/uploads/articles/' . $new_name;
+
+                    if (move_uploaded_file($tmp_name, $upload_path)) {
+                        $is_main = ($key === 0) ? 1 : 0; // La première image est la principale
+                        $stmtI = $pdo->prepare("INSERT INTO fait_article_image (id_article, image_url, alt_text, is_main) VALUES (?, ?, ?, ?)");
+                        $stmtI->execute([$id_article, $db_path, $alt_text, $is_main]);
+                    }
+                }
+            }
+        }
+
+        $pdo->commit();
+        header("Location: index.php?page=dashboard");
+        exit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $error = "Erreur lors de l'ajout : " . $e->getMessage();
+    }
 }
 ?>
 
 <div style="max-width: 800px; margin: 0 auto;">
-    <h1 style="margin-bottom: 30px; font-weight: 800;">Ajouter un nouvel article</h1>
+    <h1 style="margin-bottom: 30px; font-weight: 800;">Ajouter un nouvel article (Images Multiples)</h1>
     
-    <form action="" method="POST">
+    <?php if (isset($error)): ?>
+        <div style="background: #fff0f2; color: var(--red); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffccd2;">
+            <?= $error ?>
+        </div>
+    <?php endif; ?>
+
+    <form action="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="titre">Titre (SEO: H1 et Title) :</label>
+            <label for="titre">Titre (H1) :</label>
             <input type="text" id="titre" name="titre" required placeholder="Impact des sanctions sur l'économie">
         </div>
         
         <div style="display: flex; gap: 20px;">
             <div class="form-group" style="flex: 1;">
-                <label for="slug">Slug (URL amicale) :</label>
+                <label for="slug">Slug (URL SEO) :</label>
                 <input type="text" id="slug" name="slug" required placeholder="impact-sanctions-economie">
             </div>
             <div class="form-group" style="flex: 1;">
                 <label for="id_categorie">Catégorie :</label>
                 <select name="id_categorie" required>
                     <?php
-                    $stmt = $pdo->query("SELECT * FROM categories");
+                    $stmt = $pdo->query("SELECT * FROM dim_categorie");
                     while ($row = $stmt->fetch()) {
-                        echo "<option value='{$row['id']}'>".htmlspecialchars($row['nom'])."</option>";
+                        echo "<option value='{$row['id_categorie']}'>".htmlspecialchars($row['nom'])."</option>";
                     }
                     ?>
                 </select>
@@ -45,24 +106,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="form-group">
-            <label for="description">Meta Description (160 caractères max) :</label>
-            <input type="text" id="description" name="description" maxlength="300" required placeholder="Résumé court pour Google...">
+            <label for="contenu">Contenu de l'article (Éditeur TinyMCE) :</label>
+            <textarea id="contenu" name="contenu"></textarea>
         </div>
 
         <div class="form-group">
-            <label for="contenu">Contenu de l'article :</label>
-            <textarea id="contenu" name="contenu" required></textarea>
+            <label for="images">Images de l'article (Plusieurs possibles) :</label>
+            <input type="file" id="images" name="images[]" multiple accept="image/*" style="padding: 10px; background: #fff; border: 1.5px dashed var(--border); border-radius: 8px; width: 100%;">
+            <small style="color: #666; margin-top: 5px; display: block;">La première image sélectionnée sera l'image principale.</small>
         </div>
 
-        <div style="display: flex; gap: 20px;">
-            <div class="form-group" style="flex: 1;">
-                <label for="image">Nom de l'image (fictif) :</label>
-                <input type="text" id="image" name="image" placeholder="sanctions.jpg">
-            </div>
-            <div class="form-group" style="flex: 1;">
-                <label for="alt_image">Texte Alternatif (Alt Image SEO) :</label>
-                <input type="text" id="alt_image" name="alt_image" placeholder="Graphique montrant la chute du Rial">
-            </div>
+        <div class="form-group">
+            <label for="alt_image">Texte Alternatif pour les images (SEO) :</label>
+            <input type="text" id="alt_image" name="alt_image" placeholder="Description des images">
         </div>
 
         <div class="form-group" style="width: 200px;">

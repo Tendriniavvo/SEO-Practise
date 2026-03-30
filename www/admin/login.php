@@ -8,12 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE username = ?");
+    $stmt = $pdo->prepare("SELECT * FROM admin WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['admin_id'] = $user['id'];
+    // On accepte password_verify (pour les futurs hashs) OU le SHA256 brut du SQL
+    if ($user && (password_verify($password, $user['password']) || hash('sha256', $password) === $user['password'])) {
+        $_SESSION['admin_id'] = $user['id_admin'];
         $_SESSION['admin_user'] = $user['username'];
         header("Location: index.php?page=dashboard");
         exit();

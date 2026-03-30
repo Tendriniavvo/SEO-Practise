@@ -3,5 +3,3 @@
     &copy; <?= date('Y') ?> Iran News Administration. Tous droits réservés.
   </div>
 </footer>
-</body>
-</html>

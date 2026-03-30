@@ -4,8 +4,9 @@
 // Chemin : www/admin/pages/modules.php
 // ─────────────────────────────────────────────
 
+ob_start();
 session_start();
-require_once __DIR__ . '/../../../config/db.php';
+require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../front/inc/fonction.php'; // On peut réutiliser les fonctions du front
 
 // Protection basique de la session
@@ -29,4 +30,6 @@ if (file_exists($layoutFile)) {
     http_response_code(500);
     echo "<p>Layout admin introuvable.</p>";
 }
+
+ob_end_flush();
 ?>
