@@ -81,7 +81,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                 <h1 style="font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; font-family: 'Lora', serif;">
                     <?= htmlspecialchars($article['titre']) ?>
                 </h1>
-                <div class="meta" style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                <div class="meta" style="font-size: 13px; color: #707070; margin-bottom: 20px;">
                     Publié le <?= formatDateRelative($article['date_publication']) ?>
                     <span class="sep">|</span>
                     <?= (int)$article['nb_vues'] ?> vues
@@ -93,6 +93,8 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                     <img 
                         src="<?= htmlspecialchars(frontImageUrl($article['image_url'])) ?>" 
                         alt="<?= htmlspecialchars($article['alt_text'] ?? $article['titre']) ?>" 
+                        width="800"
+                        height="450"
                         style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px;"
                     />
                 </figure>
@@ -163,7 +165,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                         <?php foreach ($tendances as $i => $t): ?>
                         <li>
                             <span class="trend-num"><?= $i + 1 ?></span>
-                            <a href="/front/article/<?= urlencode($t['article_slug']) ?>">
+                            <a href="/front/article/<?= urlencode($t['article_slug']) ?>" aria-label="Lire l'article : <?= htmlspecialchars($t['titre']) ?>">
                                 <?= htmlspecialchars($t['titre']) ?>
                             </a>
                         </li>
@@ -182,7 +184,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                 <div style="display:flex;flex-direction:column;gap:12px">
                     <?php if (!empty($aNePasManquer)): ?>
                         <?php foreach ($aNePasManquer as $idx => $item): ?>
-                        <a href="/front/article/<?= urlencode($item['article_slug']) ?>" style="display:flex;gap:10px;align-items:center">
+                        <a href="/front/article/<?= urlencode($item['article_slug']) ?>" style="display:flex;gap:10px;align-items:center" aria-label="Lire l'article : <?= htmlspecialchars($item['titre']) ?>">
                             <?php if (!empty($item['image_url'])): ?>
                                 <img src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>" alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>" style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover" loading="lazy"/>
                             <?php else: ?>

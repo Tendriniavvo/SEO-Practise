@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // ─────────────────────────────────────────────
 // Page : Actualité Générale (et toute catégorie)
 // Chemin : www/front/pages/pages/actu_generale.php
@@ -84,13 +84,15 @@ function paginationUrl($p, $slug) {
 
         <?php if ($hero): ?>
         <!-- ── HERO ─────────────────────────────── -->
-        <a href="/front/article/<?= urlencode($hero['article_slug']) ?>" class="hero-article">
+        <a href="/front/article/<?= urlencode($hero['article_slug']) ?>" class="hero-article" aria-label="Lire l'article : <?= htmlspecialchars($hero['titre']) ?>">
 
             <?php if (!empty($hero['image_url'])): ?>
                 <img
                     class="hero-img"
                     src="<?= htmlspecialchars(frontImageUrl($hero['image_url'])) ?>"
                     alt="<?= htmlspecialchars($hero['alt_text'] ?? $hero['titre']) ?>"
+                    width="600"
+                    height="260"
                     loading="eager"
                 />
             <?php else: ?>
@@ -116,13 +118,15 @@ function paginationUrl($p, $slug) {
         <?php if (!empty($articles)): ?>
         <div class="articles-grid">
             <?php foreach ($articles as $index => $art): ?>
-            <a href="/front/article/<?= urlencode($art['article_slug']) ?>" class="article-item">
+            <a href="/front/article/<?= urlencode($art['article_slug']) ?>" class="article-item" aria-label="Lire l'article : <?= htmlspecialchars($art['titre']) ?>">
 
                 <?php if (!empty($art['image_url'])): ?>
                     <img
                         class="article-thumb"
                         src="<?= htmlspecialchars(frontImageUrl($art['image_url'])) ?>"
                         alt="<?= htmlspecialchars($art['alt_text'] ?? $art['titre']) ?>"
+                        width="120"
+                        height="80"
                         loading="lazy"
                     />
                 <?php else: ?>
@@ -153,7 +157,7 @@ function paginationUrl($p, $slug) {
             <?php if ($currentPage > 1): ?>
             <a href="<?= paginationUrl($currentPage - 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page précédente">
                 <span aria-hidden="true">‹</span>
-                <span style="position:absolute;left:-9999px;">Page précédente</span>
+                <span class="sr-only">Page précédente</span>
             </a>
             <?php endif; ?>
 
@@ -183,7 +187,7 @@ function paginationUrl($p, $slug) {
             <?php if ($currentPage < $totalPages): ?>
             <a href="<?= paginationUrl($currentPage + 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page suivante">
                 <span aria-hidden="true">›</span>
-                <span style="position:absolute;left:-9999px;">Page suivante</span>
+                <span class="sr-only">Page suivante</span>
             </a>
             <?php endif; ?>
 

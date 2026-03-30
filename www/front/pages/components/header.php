@@ -25,6 +25,8 @@
     <meta name="twitter:image" content="<?= htmlspecialchars($seoImage, ENT_QUOTES, 'UTF-8') ?>" />
   <?php endif; ?>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
@@ -34,10 +36,11 @@
 <header>
   <div class="header-top">
     <a href="/front/" class="logo" aria-label="Accueil Iran War">Iran<span>War</span></a>
-    <div class="search-bar">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" placeholder="Rechercher…" />
-    </div>
+    <form action="/front/actualites" method="GET" class="search-bar" role="search">
+      <label for="search-input" style="position:absolute;left:-9999px;">Rechercher un article</label>
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="search-input" name="q" placeholder="Rechercher…" aria-label="Rechercher sur le site" />
+    </form>
     <div class="header-actions">
       <a href="/admin/logout.php" title="Déconnexion" aria-label="Se déconnecter" style="color: var(--dark); display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; text-decoration: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

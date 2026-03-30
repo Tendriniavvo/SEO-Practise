@@ -4,6 +4,14 @@
 // Chemin : www/front/pages/modules.php
 // ─────────────────────────────────────────────
 
+// En-têtes de sécurité pour les bonnes pratiques Lighthouse
+header("X-Content-Type-Options: nosniff");
+header("X-Frame-Options: SAMEORIGIN");
+header("X-XSS-Protection: 1; mode=block");
+header("Referrer-Policy: strict-origin-when-cross-origin");
+// CSP de base (autorise les polices Google et les images locales/distantes)
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: *; connect-src 'self';");
+
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../inc/fonction.php';
 

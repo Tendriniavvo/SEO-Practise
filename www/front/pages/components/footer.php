@@ -1,10 +1,12 @@
 <!-- FOOTER -->
-<footer style="padding: 30px; text-align: center; background: var(--dark); color: #fff; margin-top: 40px;">
-  <div>
-    <h3 style="margin-bottom: 10px; font-size: 18px; font-weight: bold;">Iran War</h3>
-    <p style="font-size: 14px; color: #aaa;">Projet Universitaire - Base de données d'actualités</p>
+<footer class="main-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3 class="footer-logo">Iran War</h3>
+      <p class="footer-tagline">Projet Universitaire - Base de données d'actualités sur la guerre en Iran</p>
+    </div>
   </div>
-  <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #333; font-size: 12px; color: #888;">
+  <div class="footer-bottom">
     <span>© 2026 Iran War — Tous droits réservés</span>
   </div>
 </footer>
