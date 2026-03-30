@@ -56,10 +56,6 @@ function paginationUrl($p, $slug) {
 <div class="container">
     <main>
 
-        <div class="section-header">
-            <h1><?= $titrePage ?></h1>
-            <span class="live-badge">LIVE</span>
-        </div>
 
         <?php if ($hero): ?>
         <!-- ── HERO ─────────────────────────────── -->
