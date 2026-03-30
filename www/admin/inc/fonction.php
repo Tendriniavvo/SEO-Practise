@@ -72,49 +72,74 @@ function uploadArticleImages($pdo, $id_article, $files, $alt_text) {
 function syncArticleImagesFromContent($pdo, $id_article, $html_content) {
     if (empty($html_content)) return;
 
-    // Utilisation d'une Regex pour extraire les balises img (plus robuste pour les fragments HTML)
-    // On cherche src="..." et alt="..."
-    preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $html_content, $matches);
-    
-    if (empty($matches[1])) return;
+    // Supprimer les antislashes d'échappement ajoutés par PHP si nécessaire
+    $html_content = stripslashes($html_content);
 
-    // 1. Récupérer les images déjà en base pour cet article
+    // 1. On cherche toutes les sources d'images (SRC) et les textes alternatifs (ALT)
+    // On utilise une regex qui capture la balise img complète pour ensuite extraire src et alt
+    preg_match_all('/<img[^>]+>/i', $html_content, $img_tags);
+    
+    if (empty($img_tags[0])) {
+        // Si aucune image dans le texte, on vide la table pour cet article
+        $stmtClear = $pdo->prepare("DELETE FROM fait_article_image WHERE id_article = ?");
+        $stmtClear->execute([$id_article]);
+        return;
+    }
+
+    // 2. Récupérer les images déjà en base pour cet article
     $stmtExisting = $pdo->prepare("SELECT image_url FROM fait_article_image WHERE id_article = ?");
     $stmtExisting->execute([$id_article]);
     $db_images = $stmtExisting->fetchAll(PDO::FETCH_COLUMN);
 
-    // 2. Vérifier s'il y a déjà une image principale
-    $stmtCheckMain = $pdo->prepare("SELECT id_image FROM fait_article_image WHERE id_article = ? AND is_main = 1");
-    $stmtCheckMain->execute([$id_article]);
-    $has_main = $stmtCheckMain->fetch() ? true : false;
+    $found_in_content = [];
+    $is_first_found = true;
 
-    foreach ($matches[0] as $key => $full_tag) {
-        $src = $matches[1][$key];
-        
-        // Extraire l'alt de la balise complète
-        $alt = "";
-        if (preg_match('/alt=["\']([^"\']*)["\']/i', $full_tag, $alt_matches)) {
-            $alt = $alt_matches[1];
-        }
+    foreach ($img_tags[0] as $tag) {
+        // Extraire le SRC
+        if (preg_match('/src=["\']([^"\']+)["\']/i', $tag, $src_matches)) {
+            $src = $src_matches[1];
+            // Nettoyage de l'URL pour ne garder que le chemin relatif
+            $path = parse_url($src, PHP_URL_PATH);
+            
+            if ($path && strpos($path, '/front/assets/img/') !== false) {
+                $found_in_content[] = $path;
 
-        // Nettoyer l'URL pour ne garder que le chemin relatif (/front/assets/...)
-        $path = parse_url($src, PHP_URL_PATH);
-        
-        // On ne traite que nos images locales
-        if (strpos($path, '/front/assets/img/') !== false) {
-            $clean_alt = mb_substr($alt, 0, 150) ?: "Image article";
+                // Extraire l'ALT
+                $alt = "";
+                if (preg_match('/alt=["\']([^"\']*)["\']/i', $tag, $alt_matches)) {
+                    $alt = $alt_matches[1];
+                }
 
-            if (!in_array($path, $db_images)) {
-                $is_main = (!$has_main && $key === 0) ? 1 : 0;
-                $stmtI = $pdo->prepare("INSERT INTO fait_article_image (id_article, image_url, alt_text, is_main) VALUES (?, ?, ?, ?)");
-                $stmtI->execute([$id_article, $path, $clean_alt, $is_main]);
-                if ($is_main) $has_main = true;
-                $db_images[] = $path; // Éviter de réinsérer la même image si elle est présente 2 fois
-            } else {
-                // Mise à jour du ALT
-                $stmtU = $pdo->prepare("UPDATE fait_article_image SET alt_text = ? WHERE id_article = ? AND image_url = ?");
-                $stmtU->execute([$clean_alt, $id_article, $path]);
+                $clean_alt = mb_substr($alt, 0, 150) ?: "Image article";
+
+                if (!in_array($path, $db_images)) {
+                    // Vérifier si une image principale existe déjà en base
+                    $stmtCheckMain = $pdo->prepare("SELECT COUNT(*) FROM fait_article_image WHERE id_article = ? AND is_main = 1");
+                    $stmtCheckMain->execute([$id_article]);
+                    $has_main_in_db = ($stmtCheckMain->fetchColumn() > 0);
+
+                    // Insertion : la première image trouvée devient principale si aucune n'existe
+                    $is_main = (!$has_main_in_db && $is_first_found) ? 1 : 0;
+                    
+                    $stmtI = $pdo->prepare("INSERT INTO fait_article_image (id_article, image_url, alt_text, is_main) VALUES (?, ?, ?, ?)");
+                    $stmtI->execute([$id_article, $path, $clean_alt, $is_main]);
+                    
+                    $db_images[] = $path; 
+                } else {
+                    // Mise à jour du ALT
+                    $stmtU = $pdo->prepare("UPDATE fait_article_image SET alt_text = ? WHERE id_article = ? AND image_url = ?");
+                    $stmtU->execute([$clean_alt, $id_article, $path]);
+                }
+                $is_first_found = false;
             }
+        }
+    }
+
+    // 3. Supprimer de la base les images qui ne sont plus dans le contenu HTML
+    foreach ($db_images as $db_img_path) {
+        if (!in_array($db_img_path, $found_in_content)) {
+            $stmtDel = $pdo->prepare("DELETE FROM fait_article_image WHERE id_article = ? AND image_url = ?");
+            $stmtDel->execute([$id_article, $db_img_path]);
         }
     }
 }

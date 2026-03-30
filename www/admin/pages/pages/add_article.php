@@ -1,9 +1,4 @@
 <?php
-// On vide la session temporaire des images TinyMCE si on arrive sur la page pour la première fois
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    unset($_SESSION['temp_mce_images']);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre = $_POST['titre'];
     $slug = $_POST['slug'];
