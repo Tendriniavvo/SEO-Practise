@@ -68,7 +68,7 @@ function paginationUrl($p, $slug) {
             <?php if (!empty($hero['image_url'])): ?>
                 <img
                     class="hero-img"
-                    src="/front/assets/<?= htmlspecialchars($hero['image_url']) ?>"
+                    src="<?= htmlspecialchars(frontImageUrl($hero['image_url'])) ?>"
                     alt="<?= htmlspecialchars($hero['alt_text'] ?? $hero['titre']) ?>"
                     loading="eager"
                 />
@@ -100,7 +100,7 @@ function paginationUrl($p, $slug) {
                 <?php if (!empty($art['image_url'])): ?>
                     <img
                         class="article-thumb"
-                        src="/front/assets/<?= htmlspecialchars($art['image_url']) ?>"
+                        src="<?= htmlspecialchars(frontImageUrl($art['image_url'])) ?>"
                         alt="<?= htmlspecialchars($art['alt_text'] ?? $art['titre']) ?>"
                         loading="lazy"
                     />
@@ -201,7 +201,7 @@ function paginationUrl($p, $slug) {
                         >
                             <?php if (!empty($item['image_url'])): ?>
                                 <img
-                                    src="/front/assets/<?= htmlspecialchars($item['image_url']) ?>"
+                                    src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>"
                                     alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>"
                                     style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover"
                                     loading="lazy"

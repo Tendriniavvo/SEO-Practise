@@ -229,3 +229,54 @@ function truncate($text, $maxLen = 120) {
     if (mb_strlen($text) <= $maxLen) return $text;
     return mb_substr($text, 0, $maxLen) . '…';
 }
+
+// ─────────────────────────────────────────────
+// Helper : normalise l'URL d'image pour le front
+// Accepte :
+// - URL absolue (http://..., https://...)
+// - /front/assets/img/...
+// - front/assets/img/...
+// - /img/..., ../img/...
+// - uploads/...
+// ─────────────────────────────────────────────
+function frontImageUrl($imageUrl) {
+    if (empty($imageUrl)) {
+        return '';
+    }
+
+    $url = trim((string) $imageUrl);
+
+    if (preg_match('#^https?://#i', $url)) {
+        return $url;
+    }
+
+    if (strpos($url, '/front/assets/') === 0) {
+        return $url;
+    }
+
+    if (strpos($url, 'front/assets/') === 0) {
+        return '/' . $url;
+    }
+
+    if (strpos($url, '../img/') === 0) {
+        return '/img/' . ltrim(substr($url, strlen('../img/')), '/');
+    }
+
+    if (strpos($url, '/img/') === 0) {
+        return $url;
+    }
+
+    if (strpos($url, 'img/') === 0) {
+        return '/' . $url;
+    }
+
+    if (strpos($url, 'uploads/') === 0) {
+        return '/front/assets/' . $url;
+    }
+
+    if (strpos($url, '/uploads/') === 0) {
+        return '/front/assets' . $url;
+    }
+
+    return '/front/assets/' . ltrim($url, '/');
+}
