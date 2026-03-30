@@ -14,8 +14,6 @@ if (file_exists($contentFile)) {
 
 echo "</main>";
 
-require_once __DIR__ . '/../components/footer.php';
-
 // Fermeture du main-wrapper ouvert dans header.php
 echo "</div>"; // Fin main-wrapper
 ?>

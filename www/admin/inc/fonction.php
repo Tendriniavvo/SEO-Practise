@@ -37,6 +37,71 @@ function slugExists($pdo, $slug, $exclude_id = null) {
 }
 
 
+function createArticle($pdo, $titre, $slug, $contenu, $id_categorie, $is_active) {
+    try {
+        $pdo->beginTransaction();
+
+        if (slugExists($pdo, $slug)) {
+            throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
+        }
+
+        $today = date('Y-m-d');
+        $stmtT = $pdo->prepare("SELECT id_temps FROM dim_temps WHERE date = ?");
+        $stmtT->execute([$today]);
+        $dim_temps = $stmtT->fetch();
+
+        if (!$dim_temps) {
+            $stmtIT = $pdo->prepare("INSERT INTO dim_temps (date, annee, mois) VALUES (?, ?, ?)");
+            $stmtIT->execute([$today, date('Y'), date('m')]);
+            $id_temps = $pdo->lastInsertId();
+        } else {
+            $id_temps = $dim_temps['id_temps'];
+        }
+
+        $id_auteur = 1;
+        $date_pub = $is_active ? date('Y-m-d H:i:s') : null;
+
+        $stmtA = $pdo->prepare("INSERT INTO fait_article (id_temps, id_categorie, id_auteur, titre, contenu, slug, is_active, date_publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmtA->execute([$id_temps, $id_categorie, $id_auteur, $titre, $contenu, $slug, $is_active, $date_pub]);
+        $id_article = $pdo->lastInsertId();
+
+        syncArticleImagesFromContent($pdo, $id_article, $contenu);
+
+        $pdo->commit();
+        return $id_article;
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+}
+
+
+function updateArticle($pdo, $id_article, $titre, $slug, $contenu, $id_categorie, $is_active) {
+    try {
+        $pdo->beginTransaction();
+
+        if (slugExists($pdo, $slug, $id_article)) {
+            throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
+        }
+
+        $stmtA = $pdo->prepare("UPDATE fait_article SET titre = ?, slug = ?, contenu = ?, id_categorie = ?, is_active = ?, date_publication = CASE WHEN ? = 1 AND date_publication IS NULL THEN NOW() ELSE date_publication END WHERE id_article = ?");
+        $stmtA->execute([$titre, $slug, $contenu, $id_categorie, $is_active, $is_active, $id_article]);
+
+        syncArticleImagesFromContent($pdo, $id_article, $contenu);
+
+        $pdo->commit();
+        return true;
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+}
+
+
 function uploadArticleImages($pdo, $id_article, $files, $alt_text) {
     $upload_dir = __DIR__ . '/../../front/assets/img/';
     

@@ -7,50 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_active = ($_POST['statut'] === 'publié') ? 1 : 0;
 
     try {
-        $pdo->beginTransaction();
-
-        // 0. Vérifier si le slug existe déjà
-        if (slugExists($pdo, $slug)) {
-            throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
-        }
-
-        // 1. Gérer la dimension Temps
-        $today = date('Y-m-d');
-        $stmtT = $pdo->prepare("SELECT id_temps FROM dim_temps WHERE date = ?");
-        $stmtT->execute([$today]);
-        $dim_temps = $stmtT->fetch();
-
-        if (!$dim_temps) {
-            $stmtIT = $pdo->prepare("INSERT INTO dim_temps (date, annee, mois) VALUES (?, ?, ?)");
-            $stmtIT->execute([$today, date('Y'), date('m')]);
-            $id_temps = $pdo->lastInsertId();
-        } else {
-            $id_temps = $dim_temps['id_temps'];
-        }
-
-        // 2. Gérer l'auteur (admin par défaut)
-        $id_auteur = 1;
-
-        // 3. Insérer l'article
-        $stmtA = $pdo->prepare("INSERT INTO fait_article (id_temps, id_categorie, id_auteur, titre, contenu, slug, is_active, date_publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $date_pub = $is_active ? date('Y-m-d H:i:s') : null;
-        $stmtA->execute([$id_temps, $id_categorie, $id_auteur, $titre, $contenu, $slug, $is_active, $date_pub]);
-        $id_article = $pdo->lastInsertId();
-
-        // 4. Synchroniser les images à partir du contenu HTML (TinyMCE)
-        syncArticleImagesFromContent($pdo, $id_article, $contenu);
-
-        $pdo->commit();
+        createArticle($pdo, $titre, $slug, $contenu, $id_categorie, $is_active);
         header("Location: index.php?page=dashboard");
         exit();
     } catch (Exception $e) {
-        $pdo->rollBack();
         $error = "Erreur lors de l'ajout : " . $e->getMessage();
     }
 }
 ?>
 
-<div style="max-width: 800px; margin: 0 auto;">
+<div style="max-width: 100%; margin: 0;">
     <h1 style="margin-bottom: 30px; font-weight: 800;">Ajouter un nouvel article (Refactorisé)</h1>
     
     <?php if (isset($error)): ?>
@@ -84,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="form-group">
-            <label for="contenu">Contenu de l'article (Éditeur TinyMCE) :</label>
+            <label for="contenu">Contenu de l'article :</label>
             <textarea id="contenu" name="contenu"></textarea>
         </div>
 
