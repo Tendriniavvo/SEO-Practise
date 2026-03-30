@@ -1,19 +1,21 @@
 <?php
+// On vide la session temporaire des images TinyMCE si on arrive sur la page pour la première fois
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    unset($_SESSION['temp_mce_images']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre = $_POST['titre'];
     $slug = $_POST['slug'];
     $contenu = $_POST['contenu'];
     $id_categorie = $_POST['id_categorie'];
     $is_active = ($_POST['statut'] === 'publié') ? 1 : 0;
-    $alt_text = $_POST['alt_image'] ?: $titre;
 
     try {
         $pdo->beginTransaction();
 
         // 0. Vérifier si le slug existe déjà
-        $stmtCheck = $pdo->prepare("SELECT id_article FROM fait_article WHERE slug = ?");
-        $stmtCheck->execute([$slug]);
-        if ($stmtCheck->fetch()) {
+        if (slugExists($pdo, $slug)) {
             throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
         }
 
@@ -40,27 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtA->execute([$id_temps, $id_categorie, $id_auteur, $titre, $contenu, $slug, $is_active, $date_pub]);
         $id_article = $pdo->lastInsertId();
 
-        // 4. Gérer l'upload de plusieurs images
-        if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-            $upload_dir = __DIR__ . '/../../../uploads/articles/';
-            $files = $_FILES['images'];
-
-            foreach ($files['name'] as $key => $name) {
-                if ($files['error'][$key] === 0) {
-                    $tmp_name = $files['tmp_name'][$key];
-                    $extension = pathinfo($name, PATHINFO_EXTENSION);
-                    $new_name = uniqid('art_' . $id_article . '_') . '.' . $extension;
-                    $upload_path = $upload_dir . $new_name;
-                    $db_path = '/uploads/articles/' . $new_name;
-
-                    if (move_uploaded_file($tmp_name, $upload_path)) {
-                        $is_main = ($key === 0) ? 1 : 0; // La première image est la principale
-                        $stmtI = $pdo->prepare("INSERT INTO fait_article_image (id_article, image_url, alt_text, is_main) VALUES (?, ?, ?, ?)");
-                        $stmtI->execute([$id_article, $db_path, $alt_text, $is_main]);
-                    }
-                }
-            }
-        }
+        // 4. Synchroniser les images à partir du contenu HTML (TinyMCE)
+        syncArticleImagesFromContent($pdo, $id_article, $contenu);
 
         $pdo->commit();
         header("Location: index.php?page=dashboard");
@@ -73,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div style="max-width: 800px; margin: 0 auto;">
-    <h1 style="margin-bottom: 30px; font-weight: 800;">Ajouter un nouvel article (Images Multiples)</h1>
+    <h1 style="margin-bottom: 30px; font-weight: 800;">Ajouter un nouvel article (Refactorisé)</h1>
     
     <?php if (isset($error)): ?>
         <div style="background: #fff0f2; color: var(--red); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffccd2;">
@@ -96,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="id_categorie">Catégorie :</label>
                 <select name="id_categorie" required>
                     <?php
-                    $stmt = $pdo->query("SELECT * FROM dim_categorie");
-                    while ($row = $stmt->fetch()) {
+                    $categories = getAdminCategories($pdo);
+                    foreach ($categories as $row) {
                         echo "<option value='{$row['id_categorie']}'>".htmlspecialchars($row['nom'])."</option>";
                     }
                     ?>
@@ -108,17 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="contenu">Contenu de l'article (Éditeur TinyMCE) :</label>
             <textarea id="contenu" name="contenu"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="images">Images de l'article (Plusieurs possibles) :</label>
-            <input type="file" id="images" name="images[]" multiple accept="image/*" style="padding: 10px; background: #fff; border: 1.5px dashed var(--border); border-radius: 8px; width: 100%;">
-            <small style="color: #666; margin-top: 5px; display: block;">La première image sélectionnée sera l'image principale.</small>
-        </div>
-
-        <div class="form-group">
-            <label for="alt_image">Texte Alternatif pour les images (SEO) :</label>
-            <input type="text" id="alt_image" name="alt_image" placeholder="Description des images">
         </div>
 
         <div class="form-group" style="width: 200px;">

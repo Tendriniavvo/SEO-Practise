@@ -12,6 +12,16 @@
       selector: '#contenu',
       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+      
+      /* Upload configuration */
+      images_upload_url: '/admin/inc/upload_handler.php' + (window.location.search.includes('id=') ? '?article_id=' + new URLSearchParams(window.location.search).get('id') : ''),
+      automatic_uploads: true,
+      images_reuse_filename: true,
+      
+      /* URL handling */
+      relative_urls: false,
+      remove_script_host: false,
+      convert_urls: true,
     });
   </script>
   <style>

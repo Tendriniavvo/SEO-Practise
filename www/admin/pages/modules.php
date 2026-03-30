@@ -8,6 +8,7 @@ ob_start();
 session_start();
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../front/inc/fonction.php'; // On peut réutiliser les fonctions du front
+require_once __DIR__ . '/../inc/fonction.php'; // Fonctions spécifiques à l'admin
 
 // Protection basique de la session
 if (!isset($_SESSION['admin_id'])) {

@@ -1,16 +1,16 @@
 <?php
 // Logique de suppression simple
 if (isset($_GET['delete_id'])) {
-    $stmtD = $pdo->prepare("DELETE FROM fait_article WHERE id_article = ?");
-    $stmtD->execute([$_GET['delete_id']]);
-    header("Location: index.php?page=dashboard");
-    exit();
+    if (deleteArticle($pdo, $_GET['delete_id'])) {
+        header("Location: index.php?page=dashboard");
+        exit();
+    }
 }
 ?>
 
 <section>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h2 style="margin: 0;">Gestion des articles (Data Warehouse)</h2>
+        <h2 style="margin: 0;">Gestion des articles (Fonctions Centralisées)</h2>
         <a href="index.php?page=add_article" class="btn-admin" style="margin: 0;">➕ Ajouter un article</a>
     </div>
 
@@ -26,8 +26,8 @@ if (isset($_GET['delete_id'])) {
         </thead>
         <tbody>
             <?php
-            $stmt = $pdo->query("SELECT a.*, c.nom as cat_nom FROM fait_article a JOIN dim_categorie c ON a.id_categorie = c.id_categorie ORDER BY a.date_publication DESC");
-            while ($row = $stmt->fetch()) {
+            $articles = getAllArticles($pdo);
+            foreach ($articles as $row) {
                 $statut_class = $row['is_active'] ? 'publié' : 'brouillon';
                 $statut_label = $row['is_active'] ? 'Publié' : 'Brouillon';
                 $date_pub = $row['date_publication'] ? date('d/m/Y', strtotime($row['date_publication'])) : 'Non définie';
