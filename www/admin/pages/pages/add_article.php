@@ -16,69 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<style>
-    .admin-form-container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        font-family: 'Sora', sans-serif;
-    }
-    .admin-form-container h1 {
-        margin-bottom: 30px;
-        font-size: 24px;
-        color: #333;
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 15px;
-    }
-    .form-group {
-        margin-bottom: 20px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #555;
-    }
-    .form-group input[type="text"],
-    .form-group select {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 14px;
-        box-sizing: border-box;
-    }
-    .form-group input[type="text"]:focus,
-    .form-group select:focus {
-        border-color: #0066cc;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
-    }
-    .btn-admin {
-        background: #0066cc;
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background 0.3s;
-    }
-    .btn-admin:hover {
-        background: #0052a3;
-    }
-    .form-row {
-        display: flex;
-        gap: 20px;
-    }
-    .form-row .form-group {
-        flex: 1;
-    }
-</style>
 
 <div class="admin-form-container">
     <h1>Ajouter un nouvel article</h1>
