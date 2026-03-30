@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteBase /front/
+
+# Laisser passer les fichiers/dossiers réels
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Accueil / liste actualités
+RewriteRule ^$ index.php?page=actu_generale [L,QSA]
+RewriteRule ^actualites/?$ index.php?page=actu_generale [L,QSA]
+
+# Catégorie
+RewriteRule ^categorie/([a-z0-9-]+)/?$ index.php?page=actu_generale&categorie=$1 [L,QSA,NC]
+
+# Détail article
+RewriteRule ^article/([a-z0-9-]+)/?$ index.php?page=article&slug=$1 [L,QSA,NC]

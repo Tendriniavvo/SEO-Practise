@@ -36,7 +36,7 @@
       $categories = getCategories($pdo);
       foreach ($categories as $cat): 
       ?>
-          <li><a href="/front/pages/modules.php?page=actu_generale&categorie=<?= urlencode($cat['slug']) ?>">
+            <li><a href="/front/categorie/<?= urlencode($cat['slug']) ?>">
               <?= htmlspecialchars($cat['nom']) ?>
           </a></li>
       <?php endforeach; ?>

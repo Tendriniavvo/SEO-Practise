@@ -68,7 +68,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
 <div class="breadcrumb">
     <a href="/front/">Accueil</a>
     <span>›</span>
-    <a href="?page=actu_generale&categorie=<?= urlencode($article['categorie_slug']) ?>"><?= htmlspecialchars($article['categorie_nom']) ?></a>
+    <a href="/front/categorie/<?= urlencode($article['categorie_slug']) ?>"><?= htmlspecialchars($article['categorie_nom']) ?></a>
     <span>›</span>
     <strong><?= htmlspecialchars($article['titre']) ?></strong>
 </div>
@@ -163,7 +163,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                         <?php foreach ($tendances as $i => $t): ?>
                         <li>
                             <span class="trend-num"><?= $i + 1 ?></span>
-                            <a href="?page=article&slug=<?= urlencode($t['article_slug']) ?>">
+                            <a href="/front/article/<?= urlencode($t['article_slug']) ?>">
                                 <?= htmlspecialchars($t['titre']) ?>
                             </a>
                         </li>
@@ -182,7 +182,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                 <div style="display:flex;flex-direction:column;gap:12px">
                     <?php if (!empty($aNePasManquer)): ?>
                         <?php foreach ($aNePasManquer as $idx => $item): ?>
-                        <a href="?page=article&slug=<?= urlencode($item['article_slug']) ?>" style="display:flex;gap:10px;align-items:center">
+                        <a href="/front/article/<?= urlencode($item['article_slug']) ?>" style="display:flex;gap:10px;align-items:center">
                             <?php if (!empty($item['image_url'])): ?>
                                 <img src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>" alt="<?= htmlspecialchars($item['alt_text'] ?? '') ?>" style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover" loading="lazy"/>
                             <?php else: ?>

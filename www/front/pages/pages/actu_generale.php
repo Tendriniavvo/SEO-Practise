@@ -39,9 +39,8 @@ foreach ($categories as $cat) {
 
 // ── Helper URL pagination ───────────────────
 function paginationUrl($p, $slug) {
-    $base = '?page=actu_generale';
-    if ($slug) $base .= '&categorie=' . urlencode($slug);
-    return $base . '&p=' . $p;
+    $base = $slug ? '/front/categorie/' . urlencode($slug) : '/front/actualites';
+    return $base . '?p=' . $p;
 }
 ?>
 
@@ -59,7 +58,7 @@ function paginationUrl($p, $slug) {
 
         <?php if ($hero): ?>
         <!-- ── HERO ─────────────────────────────── -->
-        <a href="?page=article&slug=<?= urlencode($hero['article_slug']) ?>" class="hero-article">
+        <a href="/front/article/<?= urlencode($hero['article_slug']) ?>" class="hero-article">
 
             <?php if (!empty($hero['image_url'])): ?>
                 <img
@@ -91,7 +90,7 @@ function paginationUrl($p, $slug) {
         <?php if (!empty($articles)): ?>
         <div class="articles-grid">
             <?php foreach ($articles as $index => $art): ?>
-            <a href="?page=article&slug=<?= urlencode($art['article_slug']) ?>" class="article-item">
+            <a href="/front/article/<?= urlencode($art['article_slug']) ?>" class="article-item">
 
                 <?php if (!empty($art['image_url'])): ?>
                     <img
@@ -172,7 +171,7 @@ function paginationUrl($p, $slug) {
                         <?php foreach ($tendances as $i => $t): ?>
                         <li>
                             <span class="trend-num"><?= $i + 1 ?></span>
-                            <a href="?page=article&slug=<?= urlencode($t['article_slug']) ?>">
+                            <a href="/front/article/<?= urlencode($t['article_slug']) ?>">
                                 <?= htmlspecialchars($t['titre']) ?>
                             </a>
                         </li>
@@ -192,7 +191,7 @@ function paginationUrl($p, $slug) {
                     <?php if (!empty($aNePasManquer)): ?>
                         <?php foreach ($aNePasManquer as $idx => $item): ?>
                         <a
-                            href="?page=article&slug=<?= urlencode($item['article_slug']) ?>"
+                            href="/front/article/<?= urlencode($item['article_slug']) ?>"
                             style="display:flex;gap:10px;align-items:center"
                         >
                             <?php if (!empty($item['image_url'])): ?>
