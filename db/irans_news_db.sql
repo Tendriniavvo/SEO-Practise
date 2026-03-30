@@ -78,8 +78,6 @@ INSERT INTO dim_categorie (nom, slug) VALUES
 ('Sport', 'sport'), 
 ('Économie','economie');
 
-INSERT INTO dim_auteur (nom, prenom) VALUES
-('Admin', 'Admin');
 
 INSERT INTO admin (username, password) VALUES
 ('admin', SHA2('admin123', 256));
