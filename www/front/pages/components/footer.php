@@ -1,52 +1,11 @@
-﻿<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-col">
-      <h4>Rubriques</h4>
-      <ul>
-        <li><a href="#">Politique</a></li>
-        <li><a href="#">Monde</a></li>
-        <li><a href="#">Société</a></li>
-        <li><a href="#">Économie</a></li>
-        <li><a href="#">Environnement</a></li>
-        <li><a href="#">Sport</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Services</h4>
-      <ul>
-        <li><a href="#">Newsletters</a></li>
-        <li><a href="#">Application mobile</a></li>
-        <li><a href="#">20 Minutes TV</a></li>
-        <li><a href="#">Jeux</a></li>
-        <li><a href="#">Horoscope</a></li>
-        <li><a href="#">Météo</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>À propos</h4>
-      <ul>
-        <li><a href="#">Qui sommes-nous ?</a></li>
-        <li><a href="#">Charte éditoriale</a></li>
-        <li><a href="#">Publicité</a></li>
-        <li><a href="#">Recrutement</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Légal</h4>
-      <ul>
-        <li><a href="#">Mentions légales</a></li>
-        <li><a href="#">CGU</a></li>
-        <li><a href="#">Politique de confidentialité</a></li>
-        <li><a href="#">Cookies</a></li>
-        <li><a href="#">Plan du site</a></li>
-      </ul>
-    </div>
+<!-- FOOTER -->
+<footer style="padding: 30px; text-align: center; background: var(--dark); color: #fff; margin-top: 40px;">
+  <div>
+    <h3 style="margin-bottom: 10px; font-size: 18px; font-weight: bold;">3147-3131</h3>
+    <p style="font-size: 14px; color: #aaa;">Projet Universitaire - Base de données d'actualités</p>
   </div>
-  <div class="footer-bottom">
-    <span>© 2026 20 Minutes — Tous droits réservés</span>
-    <span>20minutes.fr — L'info en continu</span>
+  <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #333; font-size: 12px; color: #888;">
+    <span>© 2026 3147-3131 — Tous droits réservés</span>
   </div>
 </footer>
 

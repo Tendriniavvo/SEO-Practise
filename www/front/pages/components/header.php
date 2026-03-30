@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Actu Générale - 20 Minutes</title>
+  <title>Actu Générale - 3147-3131</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
@@ -18,7 +18,13 @@
       <input type="text" placeholder="Rechercher…" />
     </div>
     <div class="header-actions">
-      <button class="btn-abonne">S'abonner</button>
+      <a href="/front/logout.php" title="Déconnexion" style="color: var(--dark); display: flex; align-items: center; padding: 8px; border-radius: 50%; transition: background 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </a>
     </div>
   </div>
   <nav>

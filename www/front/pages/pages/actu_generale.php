@@ -188,29 +188,6 @@ function paginationUrl($p, $slug) {
             </div>
         </div>
 
-        <!-- Newsletter -->
-        <div class="widget newsletter">
-            <div class="widget-header">📧 Newsletter</div>
-            <div class="widget-body">
-                <p>Recevez l'essentiel de l'actu chaque matin directement dans votre boîte mail.</p>
-                <input type="email" placeholder="Votre adresse e-mail" />
-                <button>Je m'abonne</button>
-            </div>
-        </div>
-
-        <!-- Réseaux sociaux -->
-        <div class="widget">
-            <div class="widget-header">📱 Suivez-nous</div>
-            <div class="widget-body">
-                <div class="social-links">
-                    <button class="social-btn fb">Facebook</button>
-                    <button class="social-btn tw">X / Twitter</button>
-                    <button class="social-btn ig">Instagram</button>
-                    <button class="social-btn yt">YouTube</button>
-                </div>
-            </div>
-        </div>
-
         <!-- À ne pas manquer -->
         <div class="widget">
             <div class="widget-header">📰 À ne pas manquer</div>
