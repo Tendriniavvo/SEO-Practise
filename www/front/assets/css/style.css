@@ -49,6 +49,24 @@
       border-radius: 4px;
     }
 
+
+    a { color: inherit; }
+    a:hover { color: var(--red); }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #0a66c2;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    a[href]:not(.logo):not(.logout-link):not(.hero-article):not(.article-item):not(.pagination-btn):not(nav ul li a):not(.social-btn):not(.btn-abonne):not([style*="display:flex"]):not([style*="display: flex"]):not([style*="display:inline-flex"]):not([style*="display: inline-flex"]) {
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
+
     /* ─── HEADER ─── */
     header {
       border-bottom: 3px solid var(--red);
@@ -148,7 +166,12 @@
       color: #5f6368;
       border-bottom: 1px solid var(--border);
     }
-    .breadcrumb a { color: #9f0014; }
+    .breadcrumb a {
+      color: #9f0014;
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
     .breadcrumb span { margin: 0 5px; }
 
     /* ─── LAYOUT ─── */
@@ -277,9 +300,9 @@
       flex-shrink: 0;
     }
     .article-body { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
-    .article-body h3 { font-size: 15px; font-weight: 700; line-height: 1.35; font-family: var(--font-serif); }
-    .article-body h3:hover { color: var(--red); }
-    .article-body p { font-size: 13px; color: var(--mid); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .article-body .article-title { font-size: 15px; font-weight: 700; line-height: 1.35; font-family: var(--font-serif); margin: 0; }
+    .article-body .article-title:hover { color: var(--red); }
+    .article-body p { font-size: 13px; color: var(--mid); line-height: 1.5; display: -webkit-box; line-clamp: 2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* ─── PAGINATION ─── */
     .pagination {

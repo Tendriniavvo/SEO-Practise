@@ -138,7 +138,7 @@ function paginationUrl($p, $slug) {
 
                 <div class="article-body">
                     <span class="tag"><?= htmlspecialchars($art['categorie_nom']) ?></span>
-                    <h3><?= htmlspecialchars($art['titre']) ?></h3>
+                    <p class="article-title"><?= htmlspecialchars($art['titre']) ?></p>
                     <p><?= truncate($art['contenu'], 110) ?></p>
                     <div class="meta">
                         <span><?= formatDateRelative($art['date_publication']) ?></span>

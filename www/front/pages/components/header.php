@@ -28,11 +28,7 @@
   <?php if (!empty($seoPreloadImage)): ?>
     <link rel="preload" as="image" href="<?= htmlspecialchars($seoPreloadImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high" />
   <?php endif; ?>
-  <?php
-    $frontCssPath = __DIR__ . '/../../assets/css/style.css';
-    $frontCssVersion = file_exists($frontCssPath) ? filemtime($frontCssPath) : time();
-  ?>
-  <link rel="stylesheet" href="/front/assets/css/style.css?v=<?= (int) $frontCssVersion ?>">
+  <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
 <body>
 

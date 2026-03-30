@@ -132,7 +132,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                 }
                 .tinymce-content a {
                     color: var(--red);
-                    text-decoration: none;
+                    text-decoration: underline;
                 }
                 .tinymce-content ul, .tinymce-content ol {
                     margin-left: 40px;
