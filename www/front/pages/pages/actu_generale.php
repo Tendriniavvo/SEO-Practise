@@ -151,7 +151,10 @@ function paginationUrl($p, $slug) {
         <div class="pagination">
 
             <?php if ($currentPage > 1): ?>
-            <a href="<?= paginationUrl($currentPage - 1, $slugCategorie) ?>" class="pagination-btn">‹</a>
+            <a href="<?= paginationUrl($currentPage - 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page précédente">
+                <span aria-hidden="true">‹</span>
+                <span style="position:absolute;left:-9999px;">Page précédente</span>
+            </a>
             <?php endif; ?>
 
             <?php
@@ -160,24 +163,28 @@ function paginationUrl($p, $slug) {
             $end   = min($totalPages, $currentPage + 2);
 
             if ($start > 1): ?>
-                <a href="<?= paginationUrl(1, $slugCategorie) ?>" class="pagination-btn">1</a>
+                <a href="<?= paginationUrl(1, $slugCategorie) ?>" class="pagination-btn" aria-label="Aller à la page 1">1</a>
                 <?php if ($start > 2): ?><span class="pagination-ellipsis">…</span><?php endif; ?>
             <?php endif; ?>
 
             <?php for ($i = $start; $i <= $end; $i++): ?>
             <a
                 href="<?= paginationUrl($i, $slugCategorie) ?>"
+                aria-label="Aller à la page <?= $i ?>"
                 class="pagination-btn <?= $i === $currentPage ? 'active' : '' ?>"
             ><?= $i ?></a>
             <?php endfor; ?>
 
             <?php if ($end < $totalPages): ?>
                 <?php if ($end < $totalPages - 1): ?><span class="pagination-ellipsis">…</span><?php endif; ?>
-                <a href="<?= paginationUrl($totalPages, $slugCategorie) ?>" class="pagination-btn"><?= $totalPages ?></a>
+                <a href="<?= paginationUrl($totalPages, $slugCategorie) ?>" class="pagination-btn" aria-label="Aller à la page <?= $totalPages ?>"><?= $totalPages ?></a>
             <?php endif; ?>
 
             <?php if ($currentPage < $totalPages): ?>
-            <a href="<?= paginationUrl($currentPage + 1, $slugCategorie) ?>" class="pagination-btn">›</a>
+            <a href="<?= paginationUrl($currentPage + 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page suivante">
+                <span aria-hidden="true">›</span>
+                <span style="position:absolute;left:-9999px;">Page suivante</span>
+            </a>
             <?php endif; ?>
 
         </div>

@@ -1,6 +1,9 @@
 RewriteEngine On
 RewriteBase /
 
+# Ne pas réécrire robots.txt (évite de renvoyer du HTML invalide)
+RewriteRule ^robots\.txt$ - [R=404,L]
+
 # 1. Empêcher l'accès direct aux fichiers PHP internes (sauf index de dossiers si besoin)
 # RewriteCond %{REQUEST_URI} ^/front/ [NC,OR]
 # RewriteCond %{REQUEST_URI} ^/config/ [NC]

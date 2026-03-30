@@ -10,28 +10,60 @@ require_once __DIR__ . '/../inc/fonction.php';
 // Page demandée (sécurisée : lettres, chiffres, tirets, underscores uniquement)
 $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9_\-]/i', '', $_GET['page']) : 'actu_generale';
 
-// Titre SEO dynamique par page
-$seoTitle = 'Actualités sur la guerre en Iran - Iran War';
+// Variables SEO dynamiques par page
+$siteName = 'Iran War';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$baseUrl = $scheme . '://' . $host;
+$requestPath = strtok($_SERVER['REQUEST_URI'] ?? '/front/', '?') ?: '/front/';
+
+$seoTitle = 'Actualités sur la guerre en Iran - ' . $siteName;
+$seoDescription = 'Suivez les actualités et analyses sur la guerre en Iran : contexte, géopolitique et impacts internationaux.';
+$seoKeywords = 'guerre en iran, actualités iran, géopolitique moyen-orient, conflits internationaux';
+$seoType = 'website';
+$seoCanonical = $baseUrl . $requestPath;
+$seoImage = '';
 
 if ($page === 'article' && isset($_GET['slug'])) {
     $slug = preg_replace('/[^a-z0-9\-]/i', '', $_GET['slug']);
     $articleForTitle = getArticleBySlug($pdo, $slug);
 
     if (!empty($articleForTitle['titre'])) {
-        $seoTitle = $articleForTitle['titre'] . ' - Iran War';
+        $seoTitle = $articleForTitle['titre'] . ' - ' . $siteName;
+        $seoDescription = truncate($articleForTitle['contenu'] ?? '', 160);
+        if (empty($seoDescription)) {
+            $seoDescription = 'Découvrez cet article et son analyse sur la guerre en Iran.';
+        }
+        $seoKeywords = 'article iran, guerre en iran, analyse géopolitique, actualité internationale';
+        $seoType = 'article';
+        $seoCanonical = $baseUrl . '/front/article/' . rawurlencode($slug);
+        if (!empty($articleForTitle['image_url'])) {
+            $imagePath = frontImageUrl($articleForTitle['image_url']);
+            if (strpos($imagePath, 'http://') === 0 || strpos($imagePath, 'https://') === 0) {
+                $seoImage = $imagePath;
+            } else {
+                $seoImage = $baseUrl . $imagePath;
+            }
+        }
     } else {
-        $seoTitle = 'Article - Iran War';
+        $seoTitle = 'Article - ' . $siteName;
+        $seoDescription = 'Consultez cet article lié aux actualités sur la guerre en Iran.';
     }
 } elseif ($page === 'actu_generale' && isset($_GET['categorie'])) {
     $categorieSlug = preg_replace('/[^a-z0-9\-]/i', '', $_GET['categorie']);
     $categories = getCategories($pdo);
+    $seoCanonical = $baseUrl . '/front/categorie/' . rawurlencode($categorieSlug);
 
     foreach ($categories as $cat) {
         if ($cat['slug'] === $categorieSlug) {
-            $seoTitle = $cat['nom'] . ' - Actualités guerre en Iran - Iran War';
+            $seoTitle = $cat['nom'] . ' - Actualités guerre en Iran - ' . $siteName;
+            $seoDescription = 'Retrouvez les dernières informations de la catégorie ' . $cat['nom'] . ' sur la guerre en Iran.';
+            $seoKeywords = strtolower($cat['nom']) . ', guerre en iran, actualités iran, seo actualités';
             break;
         }
     }
+} elseif ($page === 'actu_generale') {
+    $seoCanonical = $baseUrl . '/front/actualites';
 }
 
 // Layout à utiliser (extensible : on pourrait avoir layout "article", "admin", etc.)
