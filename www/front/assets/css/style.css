@@ -27,7 +27,8 @@
       background: #fff;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 3000;
+      isolation: isolate;
       box-shadow: 0 2px 8px rgba(0,0,0,.07);
     }
     .header-top {
@@ -84,6 +85,9 @@
     nav {
       border-top: 1px solid var(--border);
       overflow-x: auto;
+      position: relative;
+      z-index: 3001;
+      background: #fff;
     }
     nav ul {
       display: flex;
@@ -127,6 +131,8 @@
       display: grid;
       grid-template-columns: 1fr 300px;
       gap: 32px;
+      position: relative;
+      z-index: 1;
     }
 
     /* ─── SECTION TITLE ─── */
@@ -243,7 +249,7 @@
     }
 
     /* ─── SIDEBAR ─── */
-    .sidebar { display: flex; flex-direction: column; gap: 28px; }
+    .sidebar { display: flex; flex-direction: column; gap: 28px; position: relative; z-index: 1; }
     .widget { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
     .widget-header {
       background: var(--dark);

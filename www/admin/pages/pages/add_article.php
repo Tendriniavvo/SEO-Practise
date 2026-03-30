@@ -80,21 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </style>
 
-<!-- Intégration de TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-  tinymce.init({
-    selector: '#contenu',
-    plugins: 'image link lists media table code',
-    toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code',
-    height: 500,
-    language: 'fr_FR',
-    // Options pour garder un HTML propre et réactif
-    image_advtab: true,
-    content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:16px } img { max-width: 100%; height: auto; }"
-  });
-</script>
-
 <div class="admin-form-container">
     <h1>Ajouter un nouvel article</h1>
     

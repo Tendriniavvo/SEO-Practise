@@ -16,6 +16,50 @@ if (!$article) {
     return;
 }
 
+$renderedContent = $article['contenu'];
+if (!empty($article['image_url']) && !empty($renderedContent)) {
+    $mainImagePath = parse_url($article['image_url'], PHP_URL_PATH) ?: $article['image_url'];
+
+    $domContent = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $domContent->loadHTML('<?xml encoding="utf-8" ?><div id="content-root">' . $renderedContent . '</div>');
+    libxml_clear_errors();
+
+    $root = $domContent->getElementById('content-root');
+    if ($root instanceof DOMElement) {
+        $toRemove = [];
+        $imgNodes = $root->getElementsByTagName('img');
+
+        foreach ($imgNodes as $imgNode) {
+            if (!($imgNode instanceof DOMElement)) {
+                continue;
+            }
+
+            $src = trim((string) $imgNode->getAttribute('src'));
+            if ($src === '') {
+                continue;
+            }
+
+            $srcPath = parse_url($src, PHP_URL_PATH) ?: $src;
+            if ($srcPath === $mainImagePath) {
+                $toRemove[] = $imgNode;
+            }
+        }
+
+        foreach ($toRemove as $node) {
+            if ($node->parentNode) {
+                $node->parentNode->removeChild($node);
+            }
+        }
+
+        $contentHtml = '';
+        foreach ($root->childNodes as $childNode) {
+            $contentHtml .= $domContent->saveHTML($childNode);
+        }
+        $renderedContent = $contentHtml;
+    }
+}
+
 // Sidebar
 $tendances = getTendances($pdo, 6);
 $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
@@ -103,7 +147,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
 
             <!-- Affichage du contenu de l'article sans altération pour respecter les balises HTML -->
             <div class="tinymce-content">
-                <?= $article['contenu'] ?>
+                <?= $renderedContent ?>
             </div>
         </article>
     </main>
