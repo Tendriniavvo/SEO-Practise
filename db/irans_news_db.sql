@@ -1,4 +1,5 @@
 -- Base de données
+SET NAMES utf8mb4;
 CREATE DATABASE IF NOT EXISTS iran_news;
 USE iran_news;
 

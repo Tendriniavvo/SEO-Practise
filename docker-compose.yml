@@ -8,7 +8,8 @@ services:
       MYSQL_DATABASE: iran_news
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./db/irans_news_db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/irans_news_db.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./db/data.sql:/docker-entrypoint-initdb.d/02_data.sql
 
   php:
     build: .

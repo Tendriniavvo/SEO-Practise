@@ -12,7 +12,7 @@
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    <a href="#" class="logo">20<span>minutes</span></a>
+    <a href="#" class="logo">3147<span>3131</span></a>
     <div class="search-bar">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" placeholder="Rechercher…" />
