@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Actu Générale - 3147-3131</title>
+  <title>Actu Générale - Iran War</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
@@ -12,7 +12,7 @@
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    <a href="#" class="logo">3147<span>3131</span></a>
+    <a href="#" class="logo">Iran<span>War</span></a>
     <div class="search-bar">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" placeholder="Rechercher…" />
