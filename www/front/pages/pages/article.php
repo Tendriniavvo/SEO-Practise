@@ -95,6 +95,9 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                         alt="<?= htmlspecialchars($article['alt_text'] ?? $article['titre']) ?>" 
                         width="800"
                         height="450"
+                        decoding="async"
+                        fetchpriority="high"
+                        loading="eager"
                         style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px;"
                     />
                 </figure>
@@ -186,7 +189,7 @@ $aNePasManquer = getANePasManquer($pdo, $article['id_article'], 3);
                         <?php foreach ($aNePasManquer as $idx => $item): ?>
                         <a href="/front/article/<?= urlencode($item['article_slug']) ?>" style="display:flex;gap:10px;align-items:center" aria-label="Lire l'article : <?= htmlspecialchars($item['titre']) ?>">
                             <?php if (!empty($item['image_url'])): ?>
-                                <img src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>" alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>" style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover" loading="lazy"/>
+                                <img src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>" alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>" width="60" height="45" style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover" decoding="async" loading="lazy"/>
                             <?php else: ?>
                                 <div style="width:60px;height:45px;border-radius:4px;flex-shrink:0" class="img-ph img-ph-<?= ($idx % 8) + 1 ?>"></div>
                             <?php endif; ?>

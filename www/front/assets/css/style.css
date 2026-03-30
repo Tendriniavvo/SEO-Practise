@@ -18,8 +18,34 @@
       font-size: 15px;
     }
 
-    a { text-decoration: none; color: inherit; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    a { color: inherit; }
     a:hover { color: var(--red); }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #0a66c2;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    a[href]:not(.logo):not(.logout-link):not(.hero-article):not(.article-item):not(.pagination-btn):not(nav ul li a):not(.social-btn):not(.btn-abonne):not([style*="display:flex"]):not([style*="display: flex"]):not([style*="display:inline-flex"]):not([style*="display: inline-flex"]) {
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
 
     /* ─── HEADER ─── */
     header {
@@ -117,10 +143,15 @@
     .breadcrumb {
       padding: 10px 24px;
       font-size: 12px;
-      color: #888;
+      color: #5f6368;
       border-bottom: 1px solid var(--border);
     }
-    .breadcrumb a { color: var(--red); }
+    .breadcrumb a {
+      color: #9f0014;
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
     .breadcrumb span { margin: 0 5px; }
 
     /* ─── LAYOUT ─── */
@@ -222,8 +253,8 @@
       font-family: 'Lora', serif;
     }
     .hero-content p { font-size: 14px; color: var(--mid); line-height: 1.6; }
-    .meta { font-size: 11px; color: #707070; display: flex; gap: 10px; align-items: center; }
-    .meta .sep { color: #ccc; }
+    .meta { font-size: 11px; color: #50555a; display: flex; gap: 10px; align-items: center; }
+    .meta .sep { color: #7a7f86; }
 
     /* ─── ARTICLE LIST ─── */
     .articles-grid {
@@ -306,12 +337,12 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .trending-list li:hover { color: var(--red); }
+    .trending-list li:hover { color: #9f0014; }
     .trend-num {
       font-size: 20px;
       font-weight: 800;
-      color: var(--red);
-      opacity: .25;
+      color: #9f0014;
+      opacity: .55;
       line-height: 1;
       flex-shrink: 0;
       width: 20px;
@@ -365,7 +396,7 @@
     /* ─── FOOTER ─── */
     .main-footer {
       background: var(--dark);
-      color: #aaa;
+      color: #d0d4d8;
       padding: 40px 24px;
       margin-top: 40px;
       text-align: center;
@@ -379,7 +410,7 @@
     }
     .footer-tagline {
       font-size: 14px;
-      color: #bbb;
+      color: #d6d9dd;
       max-width: 600px;
       margin: 0 auto 20px;
     }
@@ -389,19 +420,7 @@
       border-top: 1px solid #333;
       padding-top: 20px;
       font-size: 12px;
-      color: #999;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
+      color: #c6cad0;
     }
 
     /* ─── RESPONSIVE ─── */
@@ -436,4 +455,3 @@
       animation: pulse 1.5s infinite;
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
-  </style>

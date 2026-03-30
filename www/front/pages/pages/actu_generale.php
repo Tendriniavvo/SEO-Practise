@@ -93,6 +93,8 @@ function paginationUrl($p, $slug) {
                     alt="<?= htmlspecialchars($hero['alt_text'] ?? $hero['titre']) ?>"
                     width="600"
                     height="260"
+                    decoding="async"
+                    fetchpriority="high"
                     loading="eager"
                 />
             <?php else: ?>
@@ -127,6 +129,7 @@ function paginationUrl($p, $slug) {
                         alt="<?= htmlspecialchars($art['alt_text'] ?? $art['titre']) ?>"
                         width="120"
                         height="80"
+                        decoding="async"
                         loading="lazy"
                     />
                 <?php else: ?>
@@ -235,7 +238,10 @@ function paginationUrl($p, $slug) {
                                 <img
                                     src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>"
                                     alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>"
+                                    width="60"
+                                    height="45"
                                     style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover"
+                                    decoding="async"
                                     loading="lazy"
                                 />
                             <?php else: ?>

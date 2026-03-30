@@ -27,7 +27,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" media="print" onload="this.media='all'"/>
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"/>
+  </noscript>
   <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
 <body>
@@ -42,7 +46,7 @@
       <input type="text" id="search-input" name="q" placeholder="Rechercher…" aria-label="Rechercher sur le site" />
     </form>
     <div class="header-actions">
-      <a href="/admin/logout.php" title="Déconnexion" aria-label="Se déconnecter" style="color: var(--dark); display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; text-decoration: none;">
+      <a href="/admin/logout.php" class="logout-link" title="Déconnexion" aria-label="Se déconnecter" style="color: var(--dark); display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; text-decoration: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>
