@@ -1,0 +1,152 @@
+DOCUMENT TECHNIQUE — MINI PROJET SEO (IRAN NEWS)
+=================================================
+
+1) INFORMATIONS GÉNÉRALES
+-------------------------
+- Nom du projet : Iran News (FrontOffice + BackOffice)
+- Repository : SEO-Practise
+- Technologies : PHP 8.2, MySQL 8, Apache, Docker Compose
+- URL FrontOffice (FO) : http://localhost:8080/front/
+- URL BackOffice (BO) : http://localhost:8080/admin/login.php
+- Num ETU : [A REMPLIR ICI]
+
+
+2) OBJECTIF DU PROJET
+---------------------
+Ce projet permet de publier et consulter des articles sur l’actualité du conflit Iran / Moyen-Orient.
+Le FrontOffice présente les articles aux visiteurs (SEO, URL propres, accessibilité),
+le BackOffice permet l’administration des contenus (CRUD articles + gestion images).
+
+
+3) MODÉLISATION DE LA BASE DE DONNÉES
+-------------------------------------
+Base : iran_news
+
+Tables principales :
+- dim_temps
+  - id_temps (PK), date, annee, mois
+- dim_categorie
+  - id_categorie (PK), nom, slug
+- dim_auteur
+  - id_auteur (PK), nom, prenom
+- fait_article
+  - id_article (PK), id_temps (FK), id_categorie (FK), id_auteur (FK)
+  - titre, contenu, slug, nb_vues, is_active, date_publication
+- fait_article_image
+  - id_image (PK), id_article (FK), image_url, alt_text, is_main
+- admin
+  - id_admin (PK), username, password, created_at
+
+Relations :
+- 1 catégorie -> N articles
+- 1 auteur -> N articles
+- 1 date (dim_temps) -> N articles
+- 1 article -> N images
+
+Remarque :
+- Le champ contenu dans fait_article stocke du HTML (balises h2/h3/p/ul/li).
+- image_url est stocké sous forme de chemin relatif front (ex: /front/assets/img/article-01.jpg).
+
+
+4) BACKOFFICE — IDENTIFIANTS PAR DÉFAUT
+----------------------------------------
+Login BO : http://localhost:8080/admin/login.php
+
+Compte par défaut :
+- username : admin
+- password : admin123
+
+Note technique :
+- Le mot de passe est enregistré en SHA-256 dans la table admin.
+
+
+5) DONNÉES DE DÉMONSTRATION
+---------------------------
+- 10 articles dans fait_article
+- 10 images principales dans fait_article_image (is_main = TRUE)
+- Images à placer dans : www/front/assets/img/
+  - article-01.jpg
+  - article-02.jpg
+  - article-03.jpg
+  - article-04.jpg
+  - article-05.jpg
+  - article-06.jpg
+  - article-07.jpg
+  - article-08.jpg
+  - article-09.jpg
+  - article-10.jpg
+
+
+6) CAPTURES D’ÉCRAN À INSÉRER (OBLIGATOIRES)
+---------------------------------------------
+A. FrontOffice (FO)
+1) Capture FO - Accueil
+   - URL : http://localhost:8080/front/
+   - Montrer : hero article + liste articles + sidebar
+
+2) Capture FO - Détail article
+   - URL : http://localhost:8080/front/article/<slug>
+   - Montrer : titre H1, image principale, contenu HTML
+
+3) Capture FO - Catégorie
+   - URL : http://localhost:8080/front/categorie/<slug>
+   - Montrer : filtrage par catégorie + pagination
+
+B. BackOffice (BO)
+4) Capture BO - Page de login
+   - URL : http://localhost:8080/admin/login.php
+   - Montrer les champs username/password
+
+5) Capture BO - Dashboard
+   - URL : http://localhost:8080/admin/index.php?page=dashboard
+   - Montrer la liste des articles
+
+6) Capture BO - Ajouter article
+   - URL : http://localhost:8080/admin/index.php?page=add_article
+   - Montrer TinyMCE + upload image + champs SEO
+
+7) Capture BO - Modifier article
+   - URL : http://localhost:8080/admin/index.php?page=edit_article&id=<id>
+   - Montrer la mise à jour d’un contenu existant
+
+C. Modélisation Base de données
+8) Capture MCD/MLD (ou schéma relationnel)
+   - Montrer les tables + relations FK
+   - Minimum : dim_temps, dim_categorie, dim_auteur, fait_article, fait_article_image, admin
+
+9) Capture table fait_article
+   - Montrer colonnes clés (id_article, titre, contenu, slug, date_publication)
+
+10) Capture table fait_article_image
+    - Montrer colonnes (id_image, id_article, image_url, alt_text, is_main)
+
+
+7) PROCÉDURE DE LANCEMENT (RAPIDE)
+----------------------------------
+1) Démarrer les services :
+   docker-compose up -d --build
+
+2) Réinitialiser complètement la base (si nécessaire) :
+   docker-compose down -v
+   docker-compose up -d --build
+
+3) Accéder aux interfaces :
+   - FO : http://localhost:8080/front/
+   - BO : http://localhost:8080/admin/login.php
+
+
+8) POINTS SEO / ACCESSIBILITÉ / PERFORMANCE (RÉSUMÉ)
+-----------------------------------------------------
+- SEO : title et meta dynamiques, URLs réécrites, alt des images, structure de titres.
+- Accessibilité : focus visible, contraste amélioré, hiérarchie de titres corrigée.
+- Performance : cache statique, gzip, preload image LCP, optimisations CSS.
+
+
+9) CHECKLIST AVANT RENDU
+------------------------
+[ ] Num ETU renseigné
+[ ] Captures FO insérées
+[ ] Captures BO insérées
+[ ] Capture modélisation DB insérée
+[ ] Identifiants par défaut BO indiqués
+[ ] Document relu (orthographe + cohérence)
