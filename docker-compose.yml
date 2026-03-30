@@ -5,10 +5,11 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: iran_db
+      MYSQL_DATABASE: iran_news
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/irans_news_db.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./db/data.sql:/docker-entrypoint-initdb.d/02_data.sql
 
   php:
     build: .

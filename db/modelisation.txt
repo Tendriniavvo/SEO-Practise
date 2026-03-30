@@ -1,0 +1,29 @@
+┌──────────────────────┐     ┌──────────────────────────────┐     ┌──────────────────────┐
+│ DIMENSION TEMPS      │     │   TABLE DE FAITS ARTICLE     │     │ DIMENSION AUTEUR     │
+│ id_temps             │◄────┤ id_temps (FK)                ├────►│ id_auteur            │
+│ date                 │     │ id_categorie (FK)            │     │ nom                  │
+│ annee                │     │ id_auteur (FK)               │     │ prenom               │
+│ mois                 │     │ id_article                   │     └──────────────────────┘
+└──────────────────────┘     │ titre                        │
+                             │ contenu                      │     ┌──────────────────────┐
+                             │ slug                         │     │ DIMENSION CATEGORIE  │
+                             │ nb_vues (mesure)             ├────►│ id_categorie         │
+                             │ is_active                    │     │ nom                  │
+                             │ date_publication             │     │ slug                 │
+                             └───────────────┬──────────────┘     └──────────────────────┘
+                                             │
+                             ┌───────────────┴──────────────┐
+                             │  TABLE IMAGES ARTICLE        │
+                             │ (plusieurs images possibles) │
+                             │ id_image                     │
+                             │ id_article (FK)              │
+                             │ image_url                    │
+                             │ alt_text                     │
+                             │ is_main                      │
+                             └──────────────────────────────┘
+
+Explications (Modèle en étoile / Flocon) :
+1. La **TABLE DE FAITS ARTICLE** se trouve au centre et contient toutes les clés étrangères (FK) ainsi que les mesures (ex: `nb_vues`).
+2. Les flèches partent de la Table de Faits (Clés Étrangères) vers les **DIMENSIONS** (Clés Primaires).
+3. La relation avec la dimension **CATEGORIE** est désormais parfaitement modélisée `id_categorie (FK) ----> id_categorie (PK)`.
+4. La table **IMAGES ARTICLE** est liée à l'article en "flocon" 1-N (un article possède plusieurs images).
