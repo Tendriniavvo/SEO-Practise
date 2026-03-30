@@ -32,31 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_active = ($_POST['statut'] === 'publié') ? 1 : 0;
 
     try {
-        $pdo->beginTransaction();
-
-        // 0. Vérifier si le slug existe déjà pour un AUTRE article
-        if (slugExists($pdo, $slug, $id)) {
-            throw new Exception("L'URL (slug) '$slug' est déjà utilisée par un autre article. Veuillez en choisir une autre.");
-        }
-
-        // 1. Update article
-        $stmtA = $pdo->prepare("UPDATE fait_article SET titre = ?, slug = ?, contenu = ?, id_categorie = ?, is_active = ?, date_publication = CASE WHEN ? = 1 AND date_publication IS NULL THEN NOW() ELSE date_publication END WHERE id_article = ?");
-        $stmtA->execute([$titre, $slug, $contenu, $id_categorie, $is_active, $is_active, $id]);
-
-        // 2. Synchroniser les images à partir du contenu HTML (TinyMCE)
-        syncArticleImagesFromContent($pdo, $id, $contenu);
-
-        $pdo->commit();
+        updateArticle($pdo, $id, $titre, $slug, $contenu, $id_categorie, $is_active);
         header("Location: index.php?page=dashboard");
         exit();
     } catch (Exception $e) {
-        $pdo->rollBack();
         $error = "Erreur lors de la modification : " . $e->getMessage();
     }
 }
 ?>
 
-<div style="max-width: 800px; margin: 0 auto;">
+<div style="max-width: 100%; margin: 0;">
     <h1 style="margin-bottom: 30px; font-weight: 800;">Modifier l'article (Refactorisé)</h1>
     
     <?php if (isset($error)): ?>
