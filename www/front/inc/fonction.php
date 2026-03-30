@@ -280,3 +280,46 @@ function frontImageUrl($imageUrl) {
 
     return '/front/assets/' . ltrim($url, '/');
 }
+
+// ─────────────────────────────────────────────
+// Récupère un article complet par son slug
+// ─────────────────────────────────────────────
+function getArticleBySlug($pdo, $slug) {
+    try {
+        $sql = "
+            SELECT 
+                a.id_article,
+                a.titre,
+                a.contenu,
+                a.slug         AS article_slug,
+                a.date_publication,
+                a.nb_vues,
+                c.nom          AS categorie_nom,
+                c.slug         AS categorie_slug,
+                i.image_url,
+                i.alt_text
+            FROM fait_article a
+            JOIN dim_categorie c ON a.id_categorie = c.id_categorie
+            LEFT JOIN fait_article_image i ON i.id_article = a.id_article AND i.is_main = 1
+            WHERE a.slug = :slug AND a.is_active = 1
+            LIMIT 1
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':slug' => $slug]);
+        return $stmt->fetch();
+    } catch (\PDOException $e) {
+        return null;
+    }
+}
+
+// ─────────────────────────────────────────────
+// Incrémenter les vues d'un article
+// ─────────────────────────────────────────────
+function incrementArticleViews($pdo, $id) {
+    try {
+        $stmt = $pdo->prepare("UPDATE fait_article SET nb_vues = nb_vues + 1 WHERE id_article = :id");
+        $stmt->execute([':id' => $id]);
+    } catch (\PDOException $e) {
+        // Ignorer l'erreur silencieusement
+    }
+}
