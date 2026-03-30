@@ -140,7 +140,7 @@ function paginationUrl($p, $slug) {
             </a>
             <?php endforeach; ?>
         </div>
-        <?php else: ?>
+        <?php elseif (!$hero): ?>
         <div class="empty-state">
             <p>Aucun article disponible pour cette catégorie.</p>
         </div>
