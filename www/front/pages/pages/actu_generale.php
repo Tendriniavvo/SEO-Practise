@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // ─────────────────────────────────────────────
 // Page : Actualité Générale (et toute catégorie)
 // Chemin : www/front/pages/pages/actu_generale.php
@@ -39,9 +39,8 @@ foreach ($categories as $cat) {
 
 // ── Helper URL pagination ───────────────────
 function paginationUrl($p, $slug) {
-    $base = '?page=actu_generale';
-    if ($slug) $base .= '&categorie=' . urlencode($slug);
-    return $base . '&p=' . $p;
+    $base = $slug ? '/front/categorie/' . urlencode($slug) : '/front/actualites';
+    return $base . '?p=' . $p;
 }
 ?>
 
@@ -58,18 +57,44 @@ function paginationUrl($p, $slug) {
 
         <div class="section-header">
             <h1><?= $titrePage ?></h1>
-            <span class="live-badge">LIVE</span>
         </div>
+
+        <section class="topic-intro" aria-labelledby="intro-guerre-iran">
+            <h2 id="intro-guerre-iran">Introduction : Informations sur la guerre en Iran</h2>
+            <p>
+                Ce site d'informations présente une veille structurée sur la guerre en Iran :
+                contexte géopolitique, évolution militaire, impacts humanitaires et enjeux économiques.
+                L'objectif est d'offrir une lecture claire, vérifiable et mise à jour des actualités.
+            </p>
+
+            <h3>Contexte et enjeux du conflit</h3>
+            <p>
+                La guerre en Iran s'inscrit dans un environnement régional complexe où se croisent
+                intérêts stratégiques, sécurité énergétique et équilibres diplomatiques.
+                Les analyses publiées ici aident à comprendre les faits, les acteurs et leurs positions.
+            </p>
+
+            <h4>Ce que vous trouverez sur cette page</h4>
+            <p>
+                Vous trouverez les derniers articles classés par catégorie, des tendances,
+                ainsi qu'une sélection d'actualités à ne pas manquer pour suivre l'évolution du conflit.
+            </p>
+        </section>
+
 
         <?php if ($hero): ?>
         <!-- ── HERO ─────────────────────────────── -->
-        <a href="?page=article&slug=<?= urlencode($hero['article_slug']) ?>" class="hero-article">
+        <a href="/front/article/<?= urlencode($hero['article_slug']) ?>" class="hero-article" aria-label="Lire l'article : <?= htmlspecialchars($hero['titre']) ?>">
 
             <?php if (!empty($hero['image_url'])): ?>
                 <img
                     class="hero-img"
-                    src="/front/assets/<?= htmlspecialchars($hero['image_url']) ?>"
+                    src="<?= htmlspecialchars(frontImageUrl($hero['image_url'])) ?>"
                     alt="<?= htmlspecialchars($hero['alt_text'] ?? $hero['titre']) ?>"
+                    width="600"
+                    height="260"
+                    decoding="async"
+                    fetchpriority="high"
                     loading="eager"
                 />
             <?php else: ?>
@@ -95,13 +120,16 @@ function paginationUrl($p, $slug) {
         <?php if (!empty($articles)): ?>
         <div class="articles-grid">
             <?php foreach ($articles as $index => $art): ?>
-            <a href="?page=article&slug=<?= urlencode($art['article_slug']) ?>" class="article-item">
+            <a href="/front/article/<?= urlencode($art['article_slug']) ?>" class="article-item" aria-label="Lire l'article : <?= htmlspecialchars($art['titre']) ?>">
 
                 <?php if (!empty($art['image_url'])): ?>
                     <img
                         class="article-thumb"
-                        src="/front/assets/<?= htmlspecialchars($art['image_url']) ?>"
+                        src="<?= htmlspecialchars(frontImageUrl($art['image_url'])) ?>"
                         alt="<?= htmlspecialchars($art['alt_text'] ?? $art['titre']) ?>"
+                        width="120"
+                        height="80"
+                        decoding="async"
                         loading="lazy"
                     />
                 <?php else: ?>
@@ -110,7 +138,7 @@ function paginationUrl($p, $slug) {
 
                 <div class="article-body">
                     <span class="tag"><?= htmlspecialchars($art['categorie_nom']) ?></span>
-                    <h3><?= htmlspecialchars($art['titre']) ?></h3>
+                    <p class="article-title"><?= htmlspecialchars($art['titre']) ?></p>
                     <p><?= truncate($art['contenu'], 110) ?></p>
                     <div class="meta">
                         <span><?= formatDateRelative($art['date_publication']) ?></span>
@@ -119,7 +147,7 @@ function paginationUrl($p, $slug) {
             </a>
             <?php endforeach; ?>
         </div>
-        <?php else: ?>
+        <?php elseif (!$hero): ?>
         <div class="empty-state">
             <p>Aucun article disponible pour cette catégorie.</p>
         </div>
@@ -130,7 +158,10 @@ function paginationUrl($p, $slug) {
         <div class="pagination">
 
             <?php if ($currentPage > 1): ?>
-            <a href="<?= paginationUrl($currentPage - 1, $slugCategorie) ?>" class="pagination-btn">‹</a>
+            <a href="<?= paginationUrl($currentPage - 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page précédente">
+                <span aria-hidden="true">‹</span>
+                <span class="sr-only">Page précédente</span>
+            </a>
             <?php endif; ?>
 
             <?php
@@ -139,24 +170,28 @@ function paginationUrl($p, $slug) {
             $end   = min($totalPages, $currentPage + 2);
 
             if ($start > 1): ?>
-                <a href="<?= paginationUrl(1, $slugCategorie) ?>" class="pagination-btn">1</a>
+                <a href="<?= paginationUrl(1, $slugCategorie) ?>" class="pagination-btn" aria-label="Aller à la page 1">1</a>
                 <?php if ($start > 2): ?><span class="pagination-ellipsis">…</span><?php endif; ?>
             <?php endif; ?>
 
             <?php for ($i = $start; $i <= $end; $i++): ?>
             <a
                 href="<?= paginationUrl($i, $slugCategorie) ?>"
+                aria-label="Aller à la page <?= $i ?>"
                 class="pagination-btn <?= $i === $currentPage ? 'active' : '' ?>"
             ><?= $i ?></a>
             <?php endfor; ?>
 
             <?php if ($end < $totalPages): ?>
                 <?php if ($end < $totalPages - 1): ?><span class="pagination-ellipsis">…</span><?php endif; ?>
-                <a href="<?= paginationUrl($totalPages, $slugCategorie) ?>" class="pagination-btn"><?= $totalPages ?></a>
+                <a href="<?= paginationUrl($totalPages, $slugCategorie) ?>" class="pagination-btn" aria-label="Aller à la page <?= $totalPages ?>"><?= $totalPages ?></a>
             <?php endif; ?>
 
             <?php if ($currentPage < $totalPages): ?>
-            <a href="<?= paginationUrl($currentPage + 1, $slugCategorie) ?>" class="pagination-btn">›</a>
+            <a href="<?= paginationUrl($currentPage + 1, $slugCategorie) ?>" class="pagination-btn" aria-label="Page suivante">
+                <span aria-hidden="true">›</span>
+                <span class="sr-only">Page suivante</span>
+            </a>
             <?php endif; ?>
 
         </div>
@@ -176,7 +211,7 @@ function paginationUrl($p, $slug) {
                         <?php foreach ($tendances as $i => $t): ?>
                         <li>
                             <span class="trend-num"><?= $i + 1 ?></span>
-                            <a href="?page=article&slug=<?= urlencode($t['article_slug']) ?>">
+                            <a href="/front/article/<?= urlencode($t['article_slug']) ?>">
                                 <?= htmlspecialchars($t['titre']) ?>
                             </a>
                         </li>
@@ -196,14 +231,17 @@ function paginationUrl($p, $slug) {
                     <?php if (!empty($aNePasManquer)): ?>
                         <?php foreach ($aNePasManquer as $idx => $item): ?>
                         <a
-                            href="?page=article&slug=<?= urlencode($item['article_slug']) ?>"
+                            href="/front/article/<?= urlencode($item['article_slug']) ?>"
                             style="display:flex;gap:10px;align-items:center"
                         >
                             <?php if (!empty($item['image_url'])): ?>
                                 <img
-                                    src="/front/assets/<?= htmlspecialchars($item['image_url']) ?>"
+                                    src="<?= htmlspecialchars(frontImageUrl($item['image_url'])) ?>"
                                     alt="<?= htmlspecialchars($item['alt_text'] ?? $item['titre']) ?>"
+                                    width="60"
+                                    height="45"
                                     style="width:60px;height:45px;border-radius:4px;flex-shrink:0;object-fit:cover"
+                                    decoding="async"
                                     loading="lazy"
                                 />
                             <?php else: ?>

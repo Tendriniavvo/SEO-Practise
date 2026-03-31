@@ -3,8 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Actu Générale - 3147-3131</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <title><?= htmlspecialchars($seoTitle ?? 'Actualités sur la guerre en Iran - Iran War') ?></title>
+  <meta name="description" content="<?= htmlspecialchars($seoDescription ?? 'Suivez les actualités et analyses sur la guerre en Iran.', ENT_QUOTES, 'UTF-8') ?>" />
+  <meta name="keywords" content="<?= htmlspecialchars($seoKeywords ?? 'guerre en iran, actualités iran', ENT_QUOTES, 'UTF-8') ?>" />
+  <link rel="canonical" href="<?= htmlspecialchars($seoCanonical ?? '', ENT_QUOTES, 'UTF-8') ?>" />
+
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:type" content="<?= htmlspecialchars($seoType ?? 'website', ENT_QUOTES, 'UTF-8') ?>" />
+  <meta property="og:site_name" content="Iran War" />
+  <meta property="og:title" content="<?= htmlspecialchars($seoTitle ?? 'Actualités sur la guerre en Iran - Iran War', ENT_QUOTES, 'UTF-8') ?>" />
+  <meta property="og:description" content="<?= htmlspecialchars($seoDescription ?? 'Suivez les actualités et analyses sur la guerre en Iran.', ENT_QUOTES, 'UTF-8') ?>" />
+  <meta property="og:url" content="<?= htmlspecialchars($seoCanonical ?? '', ENT_QUOTES, 'UTF-8') ?>" />
+  <?php if (!empty($seoImage)): ?>
+    <meta property="og:image" content="<?= htmlspecialchars($seoImage, ENT_QUOTES, 'UTF-8') ?>" />
+  <?php endif; ?>
+
+  <meta name="twitter:card" content="<?= !empty($seoImage) ? 'summary_large_image' : 'summary' ?>" />
+  <meta name="twitter:title" content="<?= htmlspecialchars($seoTitle ?? 'Actualités sur la guerre en Iran - Iran War', ENT_QUOTES, 'UTF-8') ?>" />
+  <meta name="twitter:description" content="<?= htmlspecialchars($seoDescription ?? 'Suivez les actualités et analyses sur la guerre en Iran.', ENT_QUOTES, 'UTF-8') ?>" />
+  <?php if (!empty($seoImage)): ?>
+    <meta name="twitter:image" content="<?= htmlspecialchars($seoImage, ENT_QUOTES, 'UTF-8') ?>" />
+  <?php endif; ?>
+
+  <?php if (!empty($seoPreloadImage)): ?>
+    <link rel="preload" as="image" href="<?= htmlspecialchars($seoPreloadImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high" />
+  <?php endif; ?>
   <link rel="stylesheet" href="/front/assets/css/style.css">
 </head>
 <body>
@@ -12,18 +35,20 @@
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    <a href="#" class="logo">3147<span>3131</span></a>
-    <div class="search-bar">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" placeholder="Rechercher…" />
-    </div>
+    <a href="/front/" class="logo" aria-label="Accueil Iran War">Iran<span>War</span></a>
+    <form action="/front/actualites" method="GET" class="search-bar" role="search">
+      <label for="search-input" style="position:absolute;left:-9999px;">Rechercher un article</label>
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="search-input" name="q" placeholder="Rechercher…" aria-label="Rechercher sur le site" />
+    </form>
     <div class="header-actions">
-      <a href="/front/logout.php" title="Déconnexion" style="color: var(--dark); display: flex; align-items: center; padding: 8px; border-radius: 50%; transition: background 0.2s;">
+      <a href="/admin/logout.php" class="logout-link" title="Déconnexion" aria-label="Se déconnecter" style="color: var(--dark); display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; text-decoration: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
+        <span>Déconnexion</span>
       </a>
     </div>
   </div>
@@ -36,7 +61,7 @@
       $categories = getCategories($pdo);
       foreach ($categories as $cat): 
       ?>
-          <li><a href="/front/pages/modules.php?page=actu_generale&categorie=<?= urlencode($cat['slug']) ?>">
+            <li><a href="/front/categorie/<?= urlencode($cat['slug']) ?>">
               <?= htmlspecialchars($cat['nom']) ?>
           </a></li>
       <?php endforeach; ?>

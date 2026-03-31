@@ -229,3 +229,97 @@ function truncate($text, $maxLen = 120) {
     if (mb_strlen($text) <= $maxLen) return $text;
     return mb_substr($text, 0, $maxLen) . '…';
 }
+
+// ─────────────────────────────────────────────
+// Helper : normalise l'URL d'image pour le front
+// Accepte :
+// - URL absolue (http://..., https://...)
+// - /front/assets/img/...
+// - front/assets/img/...
+// - /img/..., ../img/...
+// - uploads/...
+// ─────────────────────────────────────────────
+function frontImageUrl($imageUrl) {
+    if (empty($imageUrl)) {
+        return '';
+    }
+
+    $url = trim((string) $imageUrl);
+
+    if (preg_match('#^https?://#i', $url)) {
+        return $url;
+    }
+
+    if (strpos($url, '/front/assets/') === 0) {
+        return $url;
+    }
+
+    if (strpos($url, 'front/assets/') === 0) {
+        return '/' . $url;
+    }
+
+    if (strpos($url, '../img/') === 0) {
+        return '/img/' . ltrim(substr($url, strlen('../img/')), '/');
+    }
+
+    if (strpos($url, '/img/') === 0) {
+        return $url;
+    }
+
+    if (strpos($url, 'img/') === 0) {
+        return '/' . $url;
+    }
+
+    if (strpos($url, 'uploads/') === 0) {
+        return '/front/assets/' . $url;
+    }
+
+    if (strpos($url, '/uploads/') === 0) {
+        return '/front/assets' . $url;
+    }
+
+    return '/front/assets/' . ltrim($url, '/');
+}
+
+// ─────────────────────────────────────────────
+// Récupère un article complet par son slug
+// ─────────────────────────────────────────────
+function getArticleBySlug($pdo, $slug) {
+    try {
+        $sql = "
+            SELECT 
+                a.id_article,
+                a.titre,
+                a.contenu,
+                a.slug         AS article_slug,
+                a.date_publication,
+                a.nb_vues,
+                c.nom          AS categorie_nom,
+                c.slug         AS categorie_slug,
+                i.image_url,
+                i.alt_text
+            FROM fait_article a
+            JOIN dim_categorie c ON a.id_categorie = c.id_categorie
+            LEFT JOIN fait_article_image i ON i.id_article = a.id_article AND i.is_main = 1
+            WHERE a.slug = :slug AND a.is_active = 1
+            LIMIT 1
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':slug' => $slug]);
+        return $stmt->fetch();
+    } catch (\PDOException $e) {
+        return null;
+    }
+}
+
+// ─────────────────────────────────────────────
+// Incrémenter les vues d'un article
+// ─────────────────────────────────────────────
+function incrementArticleViews($pdo, $id) {
+    try {
+        $stmt = $pdo->prepare("UPDATE fait_article SET nb_vues = nb_vues + 1 WHERE id_article = :id");
+        $stmt->execute([':id' => $id]);
+    } catch (\PDOException $e) {
+        // Ignorer l'erreur silencieusement
+    }
+}
