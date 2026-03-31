@@ -36,11 +36,6 @@
 <header>
   <div class="header-top">
     <a href="/front/" class="logo" aria-label="Accueil Iran War">Iran<span>War</span></a>
-    <form action="/front/actualites" method="GET" class="search-bar" role="search">
-      <label for="search-input" style="position:absolute;left:-9999px;">Rechercher un article</label>
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="search-input" name="q" placeholder="Rechercher…" aria-label="Rechercher sur le site" />
-    </form>
     <div class="header-actions">
       <a href="/admin/logout.php" class="logout-link" title="Déconnexion" aria-label="Se déconnecter" style="color: var(--dark); display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; text-decoration: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
