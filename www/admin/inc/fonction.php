@@ -25,6 +25,62 @@ function getAdminCategories($pdo) {
 }
 
 
+function categorySlugExists($pdo, $slug) {
+    $stmt = $pdo->prepare("SELECT id_categorie FROM dim_categorie WHERE slug = ?");
+    $stmt->execute([$slug]);
+    return $stmt->fetch() ? true : false;
+}
+
+
+function buildCategorySlug($name) {
+    $slug = trim((string) $name);
+    if ($slug === '') {
+        return '';
+    }
+
+    $slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);
+    $slug = strtolower($slug ?: (string) $name);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    $slug = trim((string) $slug, '-');
+
+    return $slug;
+}
+
+
+function createAdminCategory($pdo, $nom, $slug = null) {
+    $cleanName = trim((string) $nom);
+    if ($cleanName === '') {
+        throw new Exception("Le nom de catégorie est obligatoire.");
+    }
+
+    $baseSlug = trim((string) ($slug ?? ''));
+    if ($baseSlug === '') {
+        $baseSlug = buildCategorySlug($cleanName);
+    } else {
+        $baseSlug = buildCategorySlug($baseSlug);
+    }
+
+    if ($baseSlug === '') {
+        throw new Exception("Le slug de la catégorie est invalide.");
+    }
+
+    $finalSlug = $baseSlug;
+    $counter = 2;
+    while (categorySlugExists($pdo, $finalSlug)) {
+        $finalSlug = $baseSlug . '-' . $counter;
+        $counter++;
+    }
+
+    $stmt = $pdo->prepare("INSERT INTO dim_categorie (nom, slug) VALUES (?, ?)");
+    $stmt->execute([$cleanName, $finalSlug]);
+
+    return [
+        'id_categorie' => $pdo->lastInsertId(),
+        'slug' => $finalSlug,
+    ];
+}
+
+
 function slugExists($pdo, $slug, $exclude_id = null) {
     if ($exclude_id) {
         $stmt = $pdo->prepare("SELECT id_article FROM fait_article WHERE slug = ? AND id_article != ?");
