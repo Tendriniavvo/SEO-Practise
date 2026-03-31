@@ -48,6 +48,12 @@
         </a>
       </li>
       <li>
+        <a href="/admin/index.php?page=add_categorie" class="<?= (isset($_GET['page']) && $_GET['page'] == 'add_categorie') ? 'active' : '' ?>">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 3.83 4.41 10.41a2 2 0 0 0 0 2.83l7.76 7.76a2 2 0 0 0 2.83 0l5.59-5.59a2 2 0 0 0 0-2.83z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Ajouter une catégorie
+        </a>
+      </li>
+      <li>
         <a href="/front/" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           Voir le site
